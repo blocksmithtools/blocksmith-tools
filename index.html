@@ -594,11 +594,20 @@ input[type=range]{accent-color:#5ddf2f;width:170px;cursor:pointer}
     <div class="sp-body">
       <canvas id="sp-canvas" style="cursor:pointer;flex-shrink:0;border:1px solid #3a3a3a;image-rendering:pixelated;"></canvas>
       <div class="sp-3d-wrap">
-        <canvas id="sp-3d-canvas" width="290" height="290" style="max-width:100%;max-height:290px;"></canvas>
-        <div class="sp-3d-hint">drag to rotate</div>
-        <div style="display:flex;align-items:center;gap:8px;margin-top:4px;">
-          <span style="font-size:15px;color:#444;">Speed:</span>
-          <input type="range" id="sp-speed" min="0" max="10" value="4" style="width:100px;accent-color:#5ddf2f;">
+        <div style="display:flex;gap:6px;align-items:flex-start;">
+          <canvas id="sp-3d-canvas" width="290" height="290" style="max-width:100%;max-height:290px;"></canvas>
+          <div style="display:flex;flex-direction:column;gap:4px;">
+            <button class="mcb" id="sp-zoomin" title="Zoom in">+</button>
+            <button class="mcb" id="sp-zoomout" title="Zoom out">−</button>
+          </div>
+        </div>
+        <div style="font-family:'VT323',monospace;font-size:16px;color:#555;margin-top:4px;line-height:1.6;">
+          🖱️ Left drag: rotate &nbsp;|&nbsp; Right drag: pan &nbsp;|&nbsp; +/− : zoom
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;margin-top:4px;flex-wrap:wrap;">
+          <button class="tog on" id="sp-start">▶ Start</button>
+          <button class="tog" id="sp-pause">⏸ Pause</button>
+          <input type="range" id="sp-speed" min="0" max="10" value="4" style="width:80px;accent-color:#5ddf2f;">
           <span style="font-size:15px;color:#555;" id="sp-speed-label">Normal</span>
         </div>
         <div class="sp-3d-key">
@@ -1087,7 +1096,7 @@ function initSp3D(){
   renderer.setSize(W,H);renderer.setClearColor(0x222222,1);
 
   const scene=new THREE.Scene();
-  const camera=new THREE.PerspectiveCamera(42,W/H,0.1,2000);
+  const camera=new THREE.PerspectiveCamera(50,W/H,0.1,2000);
 
   scene.add(new THREE.AmbientLight(0xffffff,0.5));
   const sun=new THREE.DirectionalLight(0xffffff,0.9);sun.position.set(3,4,5);scene.add(sun);
@@ -1134,7 +1143,7 @@ function initSp3D(){
     clearMeshes();
     updateMaterials();
     const D=S.sphere.d,cur=S.sphere.layer,solid=S.sphere.mode==='solid',below=S.sphere.cut==='below';
-    camera.position.set(0,0,D*1.75);camera.lookAt(0,0,0);
+    camera.position.set(0,0,D*2.2);camera.lookAt(0,0,0);
     const normal=[],layer=[],done=[];
     const shell=solid?null:getShell(D);
     for(let ly=1;ly<=D;ly++){
@@ -1169,23 +1178,40 @@ function initSp3D(){
   }
 
 
-  // Rotation / drag
-  let rotX=0.38,rotY=0.4,drag=false,lx=0,ly=0,autoSpin=true;
+  // Rotation / drag — left click rotates, right click pans
+  let rotX=0.38,rotY=0.4,panX=0,panY=0;
+  let drag=false,panning=false,lx=0,ly=0,autoSpin=true;
 
-  canvas.addEventListener('mousedown',e=>{drag=true;autoSpin=false;lx=e.clientX;ly=e.clientY;});
-  window.addEventListener('mouseup',()=>drag=false);
-  window.addEventListener('mousemove',e=>{
-    if(!drag)return;
-    rotY+=(e.clientX-lx)*.013;rotX+=(e.clientY-ly)*.013;
-    rotX=Math.max(-1.5,Math.min(1.5,rotX));lx=e.clientX;ly=e.clientY;
+  canvas.addEventListener('contextmenu',e=>e.preventDefault());
+  canvas.addEventListener('mousedown',e=>{
+    e.preventDefault();
+    if(e.button===2){panning=true;}else{drag=true;autoSpin=false;}
+    lx=e.clientX;ly=e.clientY;
   });
-  canvas.addEventListener('touchstart',e=>{drag=true;autoSpin=false;lx=e.touches[0].clientX;ly=e.touches[0].clientY;e.preventDefault();},{passive:false});
-  window.addEventListener('touchend',()=>drag=false);
+  window.addEventListener('mouseup',()=>{drag=false;panning=false;});
+  window.addEventListener('mousemove',e=>{
+    const dx=e.clientX-lx,dy=e.clientY-ly;
+    if(drag){rotY+=dx*.013;rotX+=dy*.013;rotX=Math.max(-1.5,Math.min(1.5,rotX));}
+    if(panning){panX+=dx*0.02;panY-=dy*0.02;}
+    lx=e.clientX;ly=e.clientY;
+  });
+  canvas.addEventListener('touchstart',e=>{
+    drag=true;autoSpin=false;lx=e.touches[0].clientX;ly=e.touches[0].clientY;e.preventDefault();
+  },{passive:false});
+  window.addEventListener('touchend',()=>{drag=false;});
   window.addEventListener('touchmove',e=>{
     if(!drag)return;
     rotY+=(e.touches[0].clientX-lx)*.013;rotX+=(e.touches[0].clientY-ly)*.013;
     rotX=Math.max(-1.5,Math.min(1.5,rotX));lx=e.touches[0].clientX;ly=e.touches[0].clientY;
   });
+
+  // Pause / Start buttons
+  document.getElementById('sp-pause')?.addEventListener('click',()=>{autoSpin=false;});
+  document.getElementById('sp-start')?.addEventListener('click',()=>{autoSpin=true;});
+
+  // Zoom buttons
+  document.getElementById('sp-zoomin')?.addEventListener('click',()=>{camera.position.z=Math.max(d*0.8,camera.position.z-d*0.15);});
+  document.getElementById('sp-zoomout')?.addEventListener('click',()=>{camera.position.z=Math.min(d*4,camera.position.z+d*0.15);});
 
   rebuild();
 
@@ -1197,6 +1223,7 @@ function initSp3D(){
       rotY+=spd*0.0015;
     }
     group.rotation.set(rotX,rotY,0);
+    group.position.set(panX,panY,0);
     renderer.render(scene,camera);
   })();
 
