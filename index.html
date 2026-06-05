@@ -51,7 +51,7 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 body{background:#222222;color:#dddddd;font-family:'VT323',monospace;min-height:100vh}
-#app{max-width:960px;margin:0 auto;padding:1.5rem 1rem 3rem}
+#app{max-width:1400px;margin:0 auto;padding:1.5rem 1rem 3rem}
 
 h1{
   font-family:'Press Start 2P',monospace;font-size:13px;
@@ -167,7 +167,7 @@ input[type=range]{accent-color:#5ddf2f;width:170px;cursor:pointer}
 .expbtn:active{border-color:#0a1820;border-bottom-color:#1e5070;border-right-color:#1e5070;transform:translate(1px,1px);}
 .expbtn:disabled{opacity:.4;cursor:default;}
 .exp-msg{font-size:16px;color:#4caf6e;}
-.sp-body{display:flex;gap:1.25rem;align-items:flex-start;flex-wrap:wrap;margin-bottom:.5rem}
+.sp-body{display:flex;gap:1.25rem;align-items:flex-start;flex-wrap:nowrap;overflow-x:auto;margin-bottom:.5rem}
 .sp-body>.gscroll{flex-shrink:0;}
 .sp-3d-wrap{display:flex;flex-direction:column;align-items:center;gap:6px;flex-shrink:0}
 #sp-3d-canvas{display:block;border:1px solid #3a3a3a;cursor:grab;}
@@ -592,35 +592,30 @@ input[type=range]{accent-color:#5ddf2f;width:170px;cursor:pointer}
     <div class="linfo" id="sp-linfo"></div>
     <div class="stats" id="sp-stats"></div>
     <div class="sp-body">
-      <canvas id="sp-canvas" style="cursor:pointer;flex-shrink:0;border:1px solid #3a3a3a;image-rendering:pixelated;"></canvas>
+      <div style="flex-shrink:0;overflow:visible;"><canvas id="sp-canvas" style="cursor:pointer;display:block;border:1px solid #3a3a3a;image-rendering:pixelated;"></canvas></div>
       <div class="sp-3d-wrap">
-        <div style="display:flex;gap:6px;align-items:flex-start;">
-          <canvas id="sp-3d-canvas" width="290" height="290" style="max-width:100%;max-height:290px;"></canvas>
-          <div style="display:flex;flex-direction:column;gap:4px;">
+        <div style="position:relative;display:inline-block;">
+          <canvas id="sp-3d-canvas" width="290" height="290" style="display:block;border:1px solid #3a3a3a;cursor:grab;image-rendering:pixelated;"></canvas>
+          <div style="position:absolute;top:6px;left:6px;font-family:'VT323',monospace;font-size:15px;line-height:1.7;pointer-events:none;">
+            <div><span style="display:inline-block;width:10px;height:10px;background:#3a8c1a;margin-right:4px;vertical-align:middle;"></span><span style="color:#aaa;">Block to place</span></div>
+            <div><span style="display:inline-block;width:10px;height:10px;background:#e8c030;margin-right:4px;vertical-align:middle;"></span><span style="color:#aaa;">Current layer</span></div>
+            <div><span style="display:inline-block;width:10px;height:10px;background:#4a4a4a;margin-right:4px;vertical-align:middle;"></span><span style="color:#aaa;">Placed ✓</span></div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:4px;position:absolute;top:6px;right:-34px;">
             <button class="mcb" id="sp-zoomin" title="Zoom in">+</button>
             <button class="mcb" id="sp-zoomout" title="Zoom out">−</button>
           </div>
         </div>
-        <div style="font-family:'VT323',monospace;font-size:16px;color:#555;margin-top:4px;line-height:1.6;">
+        <div style="font-family:'VT323',monospace;font-size:16px;color:#777;line-height:1.6;margin-top:6px;">
           🖱️ Left drag: rotate &nbsp;|&nbsp; Right drag: pan &nbsp;|&nbsp; +/− : zoom
         </div>
         <div style="display:flex;align-items:center;gap:6px;margin-top:4px;flex-wrap:wrap;">
           <button class="tog on" id="sp-start">▶ Start</button>
           <button class="tog" id="sp-pause">⏸ Pause</button>
           <input type="range" id="sp-speed" min="0" max="10" value="4" style="width:80px;accent-color:#5ddf2f;">
-          <span style="font-size:15px;color:#555;" id="sp-speed-label">Normal</span>
-        </div>
-        <div class="sp-3d-key">
-          <span><i style="background:#3a8c1a"></i> Shell block</span>
-          <span><i style="background:#e8c030"></i> Current layer</span>
-          <span><i style="background:#4a4a4a"></i> Placed ✓</span>
+          <span style="font-size:15px;color:#666;" id="sp-speed-label">Normal</span>
         </div>
       </div>
-    </div>
-    <div class="legend">
-      <div class="li"><div class="ls" style="background:#4ecf22"></div> Block to place</div>
-      <div class="li"><div class="ls" style="background:#585858"></div> Placed ✓</div>
-      <div style="color:#888;font-size:15px;margin-left:.5rem">Each layer tracks progress independently</div>
     </div>
     <div class="export-bar">
       <span class="blk-label">Block:</span>
@@ -731,7 +726,7 @@ input[type=range]{accent-color:#5ddf2f;width:170px;cursor:pointer}
 
 </div>
 
-<div id="app-footer" style="max-width:960px;margin:0 auto;padding:0 1rem 2rem">
+<div id="app-footer" style="max-width:1400px;margin:0 auto;padding:0 1rem 2rem">
   <div id="footer">
     <a onclick="document.getElementById('about-overlay').classList.add('show')">About</a>
     <a onclick="document.getElementById('privacy-overlay').classList.add('show')">Privacy Policy</a>
@@ -943,8 +938,8 @@ function rSphere(){
 }
 
 function renderSpherCanvas(logicalGrid,d){
-  const CS=Math.max(4,Math.min(26,Math.floor(540/d)));
   const GAP=1;
+  const CS=Math.max(4,Math.min(26,Math.floor((401-d)/d)));
   const SIZE=d*(CS+GAP)-GAP;
 
   // Clone first to remove stale click listeners, THEN draw on the new canvas
@@ -1086,8 +1081,8 @@ let cachedShell=null,cachedShellD=-1;
 function initSp3D(){
   if(sp3d){sp3d.dispose();}
   const canvas=document.getElementById('sp-3d-canvas');
-  const d=S.sphere.d;
-  const size=Math.max(180,Math.min(290,d*12));
+  const spCanvas=document.getElementById('sp-canvas');
+  const size=spCanvas?Math.max(200,Math.min(450,spCanvas.width)):290;
   canvas.width=size;canvas.height=size;
   canvas.style.width=size+'px';canvas.style.height=size+'px';
   const W=size,H=size;
@@ -1209,10 +1204,6 @@ function initSp3D(){
   document.getElementById('sp-pause')?.addEventListener('click',()=>{autoSpin=false;});
   document.getElementById('sp-start')?.addEventListener('click',()=>{autoSpin=true;});
 
-  // Zoom buttons
-  document.getElementById('sp-zoomin')?.addEventListener('click',()=>{camera.position.z=Math.max(d*0.8,camera.position.z-d*0.15);});
-  document.getElementById('sp-zoomout')?.addEventListener('click',()=>{camera.position.z=Math.min(d*4,camera.position.z+d*0.15);});
-
   rebuild();
 
   let raf;
@@ -1236,6 +1227,8 @@ function initSp3D(){
   sp3d={
     rebuild,
     updateMaterials,
+    zoomIn(){const D=S.sphere.d;camera.position.z=Math.max(D*0.8,camera.position.z-D*0.2);},
+    zoomOut(){const D=S.sphere.d;camera.position.z=Math.min(D*5,camera.position.z+D*0.2);},
     dispose(){
       cancelAnimationFrame(raf);
       clearMeshes();
@@ -1300,6 +1293,8 @@ document.getElementById('sp-d').addEventListener('change',()=>{
   S.sphere.d=v;S.sphere.ck={};cachedShellD=-1;if(sp3d)sp3d.dispose();rSphere();
 });
 document.getElementById('sp-layer').addEventListener('input',e=>{S.sphere.layer=+e.target.value;rSphere();});
+document.getElementById('sp-zoomin').addEventListener('click',()=>{if(sp3d)sp3d.zoomIn();});
+document.getElementById('sp-zoomout').addEventListener('click',()=>{if(sp3d)sp3d.zoomOut();});
 document.getElementById('sp-mhol').onclick=()=>{S.sphere.mode='hollow';S.sphere.ck={};document.getElementById('sp-mhol').classList.add('on');document.getElementById('sp-msol').classList.remove('on');rSphere();};
 document.getElementById('sp-msol').onclick=()=>{S.sphere.mode='solid';S.sphere.ck={};document.getElementById('sp-msol').classList.add('on');document.getElementById('sp-mhol').classList.remove('on');rSphere();};
 document.getElementById('sp-cbelow').onclick=()=>{S.sphere.cut='below';document.getElementById('sp-cbelow').classList.add('on');document.getElementById('sp-cabove').classList.remove('on');if(sp3d)sp3d.rebuild();};
