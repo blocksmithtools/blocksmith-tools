@@ -1,0 +1,2493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Minecraft Builder Tools — Circle, Sphere, Oval & Arc Generator</title>
+<meta name="description" content="Free Minecraft building tools. Generate pixel-perfect circles, spheres, ovals and arcs. Click blocks to track your progress and export as .schem schematic.">
+<meta name="keywords" content="minecraft circle generator, minecraft sphere generator, minecraft oval generator, minecraft arc, minecraft schematic, building tools">
+<meta property="og:title" content="Minecraft Builder Tools — Circle, Sphere, Oval & Arc Generator">
+<meta property="og:description" content="Free pixel-perfect circle, sphere, oval and arc generators for Minecraft builders. Track progress and export as .schem schematics.">
+<meta property="og:url" content="https://blocksmith.tools">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://blocksmith.tools/favicon.png">
+<meta property="og:site_name" content="Blocksmith Tools">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Minecraft Builder Tools — Circle, Sphere, Oval & Arc Generator">
+<meta name="twitter:description" content="Free pixel-perfect circle, sphere, oval and arc generators for Minecraft builders. Export as .schem schematics.">
+<meta name="twitter:image" content="https://blocksmith.tools/favicon.png">
+<meta name="robots" content="index, follow">
+<meta name="author" content="blocksmith.tools">
+<link rel="canonical" href="https://blocksmith.tools">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Minecraft Builder Tools",
+  "url": "https://blocksmith.tools",
+  "description": "Free pixel-perfect circle, sphere, oval and arc generators for Minecraft builders. Track block-by-block progress and export as .schem schematics.",
+  "applicationCategory": "GameApplication",
+  "operatingSystem": "Any",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "featureList": [
+    "Minecraft circle generator",
+    "Minecraft sphere generator",
+    "Minecraft oval generator",
+    "Minecraft arc generator",
+    "Schematic export (.schem)",
+    "Block progress tracking"
+  ]
+}
+</script>
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="apple-touch-icon" href="/favicon.png">
+<link href="https://fonts.googleapis.com/css2?family=VT323&family=Press+Start+2P&display=swap" rel="stylesheet">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9445201830844899" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:#222222;color:#dddddd;font-family:'VT323',monospace;min-height:100vh}
+#app{max-width:960px;margin:0 auto;padding:1.5rem 1rem 3rem}
+
+h1{
+  font-family:'Press Start 2P',monospace;font-size:13px;
+  color:#5ddf2f;text-shadow:2px 2px 0 #1f5c0e,4px 4px 0 rgba(0,0,0,.5);
+  margin-bottom:.25rem;letter-spacing:1px;
+}
+.subtitle{font-size:16px;color:#888888;margin-bottom:1.5rem}
+
+nav{display:flex;gap:3px;flex-wrap:wrap}
+.tab{
+  font-family:'VT323',monospace;font-size:20px;
+  padding:5px 20px 7px;background:#282828;color:#888888;
+  border:2px solid #3a3a3a;border-bottom:none;
+  cursor:pointer;position:relative;top:2px;transition:color .1s;
+}
+.tab:hover{color:#a0a8b4}
+.tab.active{background:#2c2c2c;color:#5ddf2f;border-color:#404040;z-index:1}
+
+.tool{background:#2c2c2c;border:2px solid #404040;padding:1.25rem;display:none}
+.tool.active{display:block}
+
+.ctrl{display:flex;align-items:flex-end;gap:1.25rem;flex-wrap:wrap;margin-bottom:1rem}
+.cg{display:flex;flex-direction:column;gap:4px}
+.clabel{font-size:16px;color:#888888}
+.row{display:flex;align-items:center;gap:6px}
+
+.mcb{
+  font-family:'VT323',monospace;font-size:22px;
+  width:34px;height:34px;background:#404040;color:#dddddd;
+  border:2px solid #5e5e5e;border-bottom-color:#282828;border-right-color:#282828;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  user-select:none;line-height:1;
+}
+.mcb:active{border-color:#282828;border-bottom-color:#5e5e5e;border-right-color:#5e5e5e;transform:translate(1px,1px)}
+.numval{font-size:26px;color:#ffffff;min-width:44px;text-align:center}
+
+.tog{
+  font-family:'VT323',monospace;font-size:18px;
+  padding:4px 14px 5px;background:#3a3a3a;color:#888888;
+  border:2px solid #4a4a4a;border-bottom-color:#282828;border-right-color:#282828;cursor:pointer;
+}
+.tog.on{
+  background:#1e4a25;color:#7ed957;
+  border-color:#3faa1f;border-bottom-color:#122e16;border-right-color:#122e16;
+}
+input[type=range]{accent-color:#5ddf2f;width:170px;cursor:pointer}
+.rval{font-size:20px;color:#f0c040}
+
+.numinput{
+  font-family:'VT323',monospace;font-size:26px;color:#ffffff;
+  width:58px;text-align:center;
+  background:#222222;border:2px solid #4a4a4a;border-top-color:#2c2c2c;border-left-color:#2c2c2c;
+  outline:none;padding:0 4px;
+}
+.numinput:focus{border-color:#5ddf2f;color:#5ddf2f;}
+.numinput::-webkit-outer-spin-button,.numinput::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
+.numinput[type=number]{-moz-appearance:textfield;}
+
+.stats{
+  display:flex;gap:1.25rem;flex-wrap:wrap;font-size:19px;
+  padding:6px 0;border-top:1px solid #3a3a3a;border-bottom:1px solid #3a3a3a;
+  margin-bottom:.75rem;
+}
+.stat{color:#888888}
+.stat b{color:#f0c040;font-weight:normal}
+
+.gscroll{overflow:auto;max-width:100%}
+/* Grid always shows its full boundary */
+.grid{display:inline-grid;gap:1px;background:#2a2a2a;cursor:pointer;user-select:none;image-rendering:pixelated;border:1px solid #3a3a3a;}
+.cell.air{background:#222222;}
+.grid{display:inline-grid;gap:1px;background:#181818;cursor:pointer;user-select:none;image-rendering:pixelated;}
+.cell{display:block}
+.cell.outline{background:#4ecf22;box-shadow:inset -2px -2px 0 rgba(0,0,0,.45),inset 1px 1px 0 rgba(255,255,255,.28);}
+.cell.fill{background:#236b12;box-shadow:inset -1px -1px 0 rgba(0,0,0,.3);}
+.cell.air{background:#252525}
+.cell.done{
+  background-color:#585858 !important;
+  background-image:none !important;
+  box-shadow:inset -1px -1px 0 rgba(0,0,0,.3),inset 1px 1px 0 rgba(255,255,255,.08) !important;
+  position:relative;
+  opacity:1 !important;
+}
+.cell.done::after{
+  content:'✓';position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  font-size:calc(var(--cs) * 0.55);line-height:1;
+  color:rgba(255,255,255,.55);font-family:'VT323',monospace;pointer-events:none;
+}
+
+.legend{display:flex;gap:.9rem;flex-wrap:wrap;margin-top:.6rem;font-size:15px;color:#888}
+.li{display:flex;align-items:center;gap:5px}
+.ls{width:13px;height:13px;flex-shrink:0;border:1px solid rgba(255,255,255,.06)}
+.linfo{font-size:19px;color:#888888;margin-bottom:4px}
+.linfo em{color:#f0c040;font-style:normal}
+
+/* ── Export bar ── */
+.export-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:.9rem;padding-top:.75rem;border-top:1px solid #3a3a3a;}
+.blk-label{font-size:16px;color:#888888;}
+.blk-select{
+  font-family:'VT323',monospace;font-size:18px;
+  background:#222222;color:#dddddd;
+  border:2px solid #4a4a4a;border-top-color:#2c2c2c;border-left-color:#2c2c2c;
+  padding:3px 8px;outline:none;cursor:pointer;
+}
+.blk-select:focus{border-color:#5ddf2f;}
+.expbtn{
+  font-family:'VT323',monospace;font-size:19px;
+  padding:5px 16px 6px;
+  background:#162638;color:#4ab8f0;
+  border:2px solid #1e5070;border-bottom-color:#0a1820;border-right-color:#0a1820;
+  cursor:pointer;
+}
+.expbtn:active{border-color:#0a1820;border-bottom-color:#1e5070;border-right-color:#1e5070;transform:translate(1px,1px);}
+.expbtn:disabled{opacity:.4;cursor:default;}
+.exp-msg{font-size:16px;color:#4caf6e;}
+.sp-body{display:flex;gap:1.25rem;align-items:flex-start;flex-wrap:wrap;margin-bottom:.5rem}
+.sp-body>.gscroll{flex-shrink:0;}
+.sp-3d-wrap{display:flex;flex-direction:column;align-items:center;gap:6px;flex-shrink:0}
+#sp-3d-canvas{display:block;border:1px solid #3a3a3a;cursor:grab;}
+#sp-3d-canvas:active{cursor:grabbing}
+.sp-3d-hint{font-size:14px;color:#2e2e2e;text-align:center}
+.sp-3d-key{display:flex;flex-direction:column;gap:3px;align-self:flex-start;margin-top:2px}
+.sp-3d-key span{display:flex;align-items:center;gap:6px;font-size:15px;color:#888}
+.sp-3d-key i{width:12px;height:12px;flex-shrink:0;display:inline-block}
+
+/* ── Machines ── */
+.machines-page{display:none;width:100%;}
+#machines-edition-page{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2rem;padding:3rem 1rem;}
+.edition-title{font-family:'Press Start 2P',monospace;font-size:11px;color:#5ddf2f;text-align:center;line-height:1.8;}
+.edition-cards{display:flex;gap:2rem;flex-wrap:wrap;justify-content:center;}
+.edition-card{width:180px;padding:2rem 1rem;border:2px solid #333;cursor:pointer;text-align:center;transition:border-color .15s,box-shadow .15s;display:flex;flex-direction:column;align-items:center;gap:1rem;}
+.edition-card:hover,.edition-card.selected{border-color:#5ddf2f;box-shadow:0 0 12px #5ddf2f44;}
+.edition-card .edition-icon{font-size:40px;}
+.edition-card .edition-name{font-family:'Press Start 2P',monospace;font-size:9px;color:#ccc;line-height:1.6;}
+#machines-list-page{display:none;padding:1rem 0;}
+.machines-grid{display:flex;flex-wrap:wrap;gap:1.5rem;margin-top:1rem;}
+.machine-card{border:2px solid #333;cursor:pointer;transition:border-color .15s,box-shadow .15s;background:#1a1a1a;display:flex;flex-direction:column;align-items:center;overflow:hidden;}
+.machine-card:hover{border-color:#5ddf2f;box-shadow:0 0 10px #5ddf2f33;}
+.machine-card-label{font-family:'VT323',monospace;font-size:20px;color:#ccc;padding:8px 12px;width:100%;text-align:center;background:#111;border-top:1px solid #333;}
+#machines-detail-page{display:none;padding:1rem 0;}
+.md-header{margin-bottom:1rem;}
+.md-title{font-family:'Press Start 2P',monospace;font-size:11px;color:#5ddf2f;line-height:1.8;}
+.md-meta{font-family:'VT323',monospace;font-size:18px;color:#666;margin-top:4px;}
+.md-desc{font-family:'VT323',monospace;font-size:19px;color:#999;margin-top:6px;line-height:1.4;}
+.md-layout{display:flex;gap:1.5rem;flex-wrap:wrap;align-items:flex-start;margin-top:1rem;}
+.md-iso-wrap{flex-shrink:0;overflow:hidden;border:1px solid #333;background:#1a1a1a;cursor:zoom-in;}
+.md-side{flex:1;min-width:250px;}
+.md-section-label{font-family:'Press Start 2P',monospace;font-size:8px;color:#444;margin:1rem 0 .5rem;letter-spacing:1px;}
+.block-count-row{display:flex;align-items:center;gap:8px;font-family:'VT323',monospace;font-size:18px;color:#aaa;margin-bottom:2px;}
+.block-count-swatch{width:16px;height:16px;flex-shrink:0;border:1px solid #333;image-rendering:pixelated;}
+.md-layer-tabs{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:.75rem;}
+.layer-tab{font-family:'VT323',monospace;font-size:18px;padding:4px 10px;background:#1a1a1a;border:1px solid #333;color:#666;cursor:pointer;}
+.layer-tab:hover{color:#aaa;border-color:#555;}
+.layer-tab.active{background:#1d3020;border-color:#5ddf2f;color:#5ddf2f;}
+.md-layer-label{font-family:'VT323',monospace;font-size:21px;color:#ccc;font-weight:bold;}
+.md-layer-note{font-family:'VT323',monospace;font-size:18px;color:#777;margin:.25rem 0 .5rem;line-height:1.4;}
+.machines-back{font-family:'VT323',monospace;font-size:19px;color:#555;background:none;border:1px solid #333;padding:4px 12px;cursor:pointer;margin-bottom:1rem;}
+.machines-back:hover{color:#aaa;border-color:#555;}
+
+/* ── Zoom View ── */
+.zv-wrap{display:flex;gap:1rem;align-items:flex-start;flex-wrap:wrap;}
+.zv-panel{display:flex;flex-direction:column;gap:4px;flex-shrink:0;}
+.zv-ctrl{display:flex;align-items:center;gap:6px;}
+.zv-lbl{font-size:16px;color:#888;min-width:36px;text-align:center;}
+.zv-hint{font-size:14px;color:#555;}
+
+/* ── Pixel Art ── */
+.pa-layout{display:flex;gap:1rem;align-items:flex-start;flex-wrap:wrap;}
+.pa-palette-wrap{flex-shrink:0;width:200px;}
+.pa-palette{display:flex;flex-wrap:wrap;gap:2px;max-height:480px;overflow-y:auto;background:#1a1a1a;padding:4px;border:1px solid #333;}
+.pa-block{width:28px;height:28px;cursor:pointer;box-sizing:border-box;border:2px solid transparent;flex-shrink:0;image-rendering:pixelated;}
+.pa-block:hover{border-color:#888;}
+.pa-block.sel{border-color:#5ddf2f;box-shadow:0 0 4px #5ddf2f88;}
+.pa-group{font-size:14px;color:#555;width:100%;padding:3px 0 1px;border-top:1px solid #2a2a2a;margin-top:2px;}
+.pa-tools-row{display:flex;gap:6px;align-items:center;flex-wrap:wrap;}
+#pa-canvas{cursor:crosshair;image-rendering:pixelated;display:block;}
+.pa-upload-btn{font-family:'VT323',monospace;font-size:19px;padding:5px 14px 6px;background:#162638;color:#4ab8f0;border:2px solid #1e5070;border-bottom-color:#0a1820;border-right-color:#0a1820;cursor:pointer;}
+#footer{
+  margin-top:2rem;padding-top:1rem;
+  border-top:1px solid #333;
+  display:flex;gap:1.5rem;flex-wrap:wrap;align-items:center;
+  font-family:'VT323',monospace;font-size:18px;color:#444;
+}
+#footer a{color:#555;text-decoration:none;cursor:pointer;}
+#footer a:hover{color:#8edf55;}
+#footer .copy{margin-left:auto;font-size:16px;}
+
+/* ── Info modals (About, Privacy, Contact) ── */
+.info-overlay{
+  display:none;position:fixed;inset:0;z-index:9997;
+  background:rgba(0,0,0,.75);
+  align-items:center;justify-content:center;
+  backdrop-filter:blur(3px);
+}
+.info-overlay.show{display:flex;}
+.info-box{
+  background:#2c2c2c;border:2px solid #3a3a3a;
+  max-width:500px;width:90%;padding:1.6rem;
+  position:relative;max-height:80vh;overflow-y:auto;
+}
+.info-box h2{
+  font-family:'Press Start 2P',monospace;font-size:10px;
+  color:#5ddf2f;margin-bottom:1.2rem;line-height:1.6;
+}
+.info-box p{font-family:'VT323',monospace;font-size:20px;color:#bbb;line-height:1.5;margin-bottom:.8rem;}
+.info-box a{color:#4ab8f0;}
+.info-close{
+  position:absolute;top:10px;right:12px;
+  font-family:'VT323',monospace;font-size:24px;
+  background:none;border:none;color:#555;cursor:pointer;
+}
+.info-close:hover{color:#ddd}
+#bug-btn{
+  position:fixed;bottom:20px;right:20px;z-index:1000;
+  font-family:'VT323',monospace;font-size:18px;
+  padding:8px 16px 9px;
+  background:#2c2c2c;color:#888;
+  border:2px solid #3a3a3a;border-bottom-color:#1a1a1a;border-right-color:#1a1a1a;
+  cursor:pointer;
+  transition:color .15s,border-color .15s;
+}
+#bug-btn:hover{color:#f0c040;border-color:#555;}
+
+/* ── Bug report modal ── */
+#bug-overlay{
+  display:none;position:fixed;inset:0;z-index:9998;
+  background:rgba(0,0,0,.7);
+  align-items:center;justify-content:center;
+  backdrop-filter:blur(3px);
+}
+#bug-overlay.show{display:flex;}
+#bug-box{
+  background:#2c2c2c;border:2px solid #3a3a3a;
+  max-width:420px;width:90%;padding:1.6rem;
+  position:relative;
+}
+#bug-box h2{
+  font-family:'Press Start 2P',monospace;font-size:10px;
+  color:#f0c040;margin-bottom:1.1rem;line-height:1.6;
+}
+.bug-close{
+  position:absolute;top:10px;right:12px;
+  font-family:'VT323',monospace;font-size:24px;
+  background:none;border:none;color:#555;cursor:pointer;
+}
+.bug-close:hover{color:#ddd}
+.bug-field{margin-bottom:.9rem;}
+.bug-field label{display:block;font-size:17px;color:#888;margin-bottom:4px;}
+.bug-field select,.bug-field textarea{
+  width:100%;font-family:'VT323',monospace;font-size:19px;
+  background:#1e1e1e;color:#ddd;
+  border:2px solid #3a3a3a;border-top-color:#181818;border-left-color:#181818;
+  padding:6px 8px;outline:none;resize:vertical;
+}
+.bug-field select:focus,.bug-field textarea:focus{border-color:#5ddf2f;}
+.bug-field textarea{min-height:90px;}
+#bug-submit{
+  font-family:'VT323',monospace;font-size:21px;
+  padding:7px 0 8px;width:100%;
+  background:#1e4a25;color:#7ed957;
+  border:2px solid #3faa1f;border-bottom-color:#122e16;border-right-color:#122e16;
+  cursor:pointer;
+}
+#bug-submit:active{border-color:#122e16;border-bottom-color:#3faa1f;border-right-color:#3faa1f;transform:translate(1px,1px)}
+#bug-submit:disabled{opacity:.5;cursor:default;}
+#bug-msg{font-size:18px;color:#4caf6e;margin-top:.6rem;text-align:center;min-height:22px;}
+#ab-overlay{
+  display:none;position:fixed;inset:0;z-index:9999;
+  background:rgba(0,0,0,.75);
+  align-items:center;justify-content:center;
+  backdrop-filter:blur(3px);
+}
+#ab-overlay.show{display:flex;}
+#ab-box{
+  background:#2c2c2c;border:3px solid #5ddf2f;
+  max-width:420px;width:90%;padding:1.8rem 1.6rem;
+  position:relative;text-align:center;
+  box-shadow:0 0 40px rgba(93,223,47,.15);
+}
+#ab-title{
+  font-family:'Press Start 2P',monospace;font-size:10px;
+  color:#dddddd;
+  margin-bottom:1rem;line-height:1.6;
+}
+#ab-body{font-family:'VT323',monospace;font-size:22px;color:#ddd;line-height:1.45;margin-bottom:1.4rem;}
+#ab-body em{color:#f0c040;font-style:normal;}
+#ab-dismiss{
+  font-family:'VT323',monospace;font-size:20px;
+  padding:7px 22px 8px;
+  background:#1e4a25;color:#7ed957;
+  border:2px solid #3faa1f;border-bottom-color:#122e16;border-right-color:#122e16;
+  cursor:pointer;display:block;width:100%;margin-bottom:.6rem;
+}
+#ab-dismiss:active{border-color:#122e16;border-bottom-color:#3faa1f;border-right-color:#3faa1f;transform:translate(1px,1px)}
+#ab-ignore{
+  font-size:14px;color:#444;cursor:pointer;
+  font-family:'VT323',monospace;
+  text-decoration:underline;
+  background:none;border:none;display:block;width:100%;
+}
+#ab-ignore:hover{color:#666}
+</style>
+</head>
+<body>
+
+<!-- About modal -->
+<div class="info-overlay" id="about-overlay">
+  <div class="info-box">
+    <button class="info-close" onclick="document.getElementById('about-overlay').classList.remove('show')">✕</button>
+    <h2>About Blocksmith</h2>
+    <p>Blocksmith.tools is a free, browser-based toolkit for Minecraft builders. No downloads, no accounts, no ads that follow you around — just tools that help you build.</p>
+    <p>We offer pixel-perfect generators for circles, ovals, spheres and arcs, with block-by-block progress tracking, real Minecraft block textures, and direct export to <strong>.schem</strong> schematics compatible with WorldEdit, Litematica and Axiom.</p>
+    <p>This project was built by a small team of Minecraft enthusiasts who got tired of outdated, ugly generator sites. We're always adding new tools — if you have a suggestion, let us know!</p>
+    <p>📧 <a href="mailto:help@blocksmith.tools">help@blocksmith.tools</a></p>
+  </div>
+</div>
+
+<!-- Privacy Policy modal -->
+<div class="info-overlay" id="privacy-overlay">
+  <div class="info-box">
+    <button class="info-close" onclick="document.getElementById('privacy-overlay').classList.remove('show')">✕</button>
+    <h2>Privacy Policy</h2>
+    <p><strong>Last updated: June 2025</strong></p>
+    <p>Blocksmith.tools does not collect, store or sell any personal data. We do not require you to create an account or provide any personal information to use our tools.</p>
+    <p><strong>Cookies & Local Storage</strong><br>We use browser localStorage solely to remember your bug report submission time and ad banner preferences. No tracking cookies are set by us.</p>
+    <p><strong>Advertising</strong><br>We display ads via Google AdSense. Google may use cookies to show you relevant ads based on your browsing history. You can opt out at <a href="https://adssettings.google.com" target="_blank">adssettings.google.com</a>.</p>
+    <p><strong>Third-Party Services</strong><br>We use Formspree to process bug reports. Bug reports you submit may include the information you type into the form. See <a href="https://formspree.io/legal/privacy-policy" target="_blank">Formspree's privacy policy</a> for details.</p>
+    <p><strong>Analytics</strong><br>We may use basic, privacy-friendly analytics to understand traffic patterns. No personally identifiable information is collected.</p>
+    <p>Questions? Email us at <a href="mailto:help@blocksmith.tools">help@blocksmith.tools</a></p>
+  </div>
+</div>
+
+<!-- Contact modal -->
+<div class="info-overlay" id="contact-overlay">
+  <div class="info-box">
+    <button class="info-close" onclick="document.getElementById('contact-overlay').classList.remove('show')">✕</button>
+    <h2>Contact Us</h2>
+    <p>Have a question, suggestion or just want to say hi? We'd love to hear from you.</p>
+    <p>📧 <a href="mailto:help@blocksmith.tools">help@blocksmith.tools</a></p>
+    <p>For bug reports, please use the <strong>🐛 Report a bug</strong> button at the bottom-right of the page — it helps us track issues more efficiently.</p>
+    <p>We typically respond within 1–2 business days.</p>
+  </div>
+</div>
+<button id="bug-btn">🐛 Report a bug</button>
+
+<!-- Bug report modal -->
+<div id="bug-overlay">
+  <div id="bug-box">
+    <button class="bug-close" id="bug-close">✕</button>
+    <h2>🐛 Report a Bug</h2>
+    <form id="bug-form">
+      <div class="bug-field">
+        <label>What type of issue?</label>
+        <select name="type" required>
+          <option value="">— Select an issue —</option>
+          <option value="Schematic Export Error">Schematic Export Error</option>
+          <option value="Shape Generation Error">Shape Generation Error</option>
+          <option value="3D View Error">3D View Error</option>
+          <option value="Block Tracking Error">Block Tracking / Click Error</option>
+          <option value="Display / Visual Glitch">Display / Visual Glitch</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+      <div class="bug-field">
+        <label>Which tool were you using?</label>
+        <select name="tool">
+          <option value="Circle">Circle</option>
+          <option value="Oval">Oval</option>
+          <option value="Sphere">Sphere</option>
+          <option value="Arc">Arc</option>
+          <option value="Not sure / Multiple">Not sure / Multiple</option>
+        </select>
+      </div>
+      <div class="bug-field">
+        <label>Describe the issue (optional)</label>
+        <textarea name="message" placeholder="What happened? What did you expect?"></textarea>
+      </div>
+      <input type="hidden" name="_subject" value="Bug Report — blocksmith.tools">
+      <input type="hidden" name="_replyto" value="help@blocksmith.tools">
+      <button type="submit" id="bug-submit">📨 Send Report</button>
+      <div id="bug-msg"></div>
+    </form>
+  </div>
+</div>
+<div id="ad-bait" style="position:absolute;left:-9999px;width:1px;height:1px;" class="ad ads adsbox doubleclick ad-placement carbon-ads"></div>
+
+<!-- Adblock popup -->
+<div id="ab-overlay">
+  <div id="ab-box">
+    <div id="ab-title">👋 Hey, quick note!</div>
+    <div id="ab-body">
+      It looks like you're using an adblocker.<br><br>
+      Blocksmith.tools is <em>completely free</em> to use and the ads help keep it that way — no popups, no auto-play videos, just a couple of small banners.<br><br>
+      If you enjoy the tool, consider whitelisting <em>blocksmith.tools</em> to support it. It really helps! 🙏
+    </div>
+    <button id="ab-dismiss">✅ Sure, I'll whitelist it!</button>
+    <button id="ab-ignore">Maybe later</button>
+  </div>
+</div>
+<div id="app">
+  <h1>⬛ Minecraft Builder Tools</h1>
+  <p class="subtitle">Click any block to mark it as placed</p>
+
+  <nav id="tabnav">
+    <button class="tab active" data-t="circle">⭕ Circle</button>
+    <button class="tab" data-t="oval">🥚 Oval</button>
+    <button class="tab" data-t="sphere">🌐 Sphere</button>
+    <button class="tab" data-t="arc">🌙 Arc</button>
+    <button class="tab" data-t="pixelart">🎨 Pixel Art <span style="font-size:11px;color:#f0c040;font-family:sans-serif">(beta)</span></button>
+  </nav>
+
+  <!-- CIRCLE -->
+  <div class="tool active" id="t-circle">
+    <div class="ctrl">
+      <div class="cg">
+        <div class="clabel">Diameter (blocks)</div>
+        <div class="row">
+          <button class="mcb" id="c-dec">−</button>
+          <input class="numinput" type="number" id="c-d" value="21" min="3" max="101">
+          <button class="mcb" id="c-inc">+</button>
+        </div>
+      </div>
+      <div class="cg">
+        <div class="clabel">Mode</div>
+        <div class="row">
+          <button class="tog on" id="c-mout">Outline</button>
+          <button class="tog" id="c-mfil">Filled</button>
+        </div>
+      </div>
+    </div>
+    <div class="stats" id="c-stats"></div>
+    <div class="zv-wrap">
+      <div class="gscroll"><div class="grid" id="c-grid"></div></div>
+      <div class="zv-panel">
+        <div class="zv-ctrl">
+          <button class="mcb" id="c-zm">−</button>
+          <span class="zv-lbl" id="c-zpct">20px</span>
+          <button class="mcb" id="c-zp">+</button>
+          <span class="zv-hint">drag to pan</span>
+        </div>
+        <canvas id="c-zv" style="cursor:grab;image-rendering:pixelated;border:1px solid #3a3a3a;display:block;"></canvas>
+      </div>
+    </div>
+    <div class="legend">
+      <div class="li"><div class="ls" style="background:#4ecf22"></div> Block to place</div>
+      <div class="li"><div class="ls" style="background:#236b12"></div> Fill</div>
+      <div class="li"><div class="ls" style="background:#585858"></div> Placed ✓</div>
+    </div>
+    <div class="export-bar">
+      <span class="blk-label">Block:</span>
+      <select class="blk-select" id="c-block"></select>
+      <button class="expbtn" id="c-export">⬇ Export .schem</button>
+      <span class="exp-msg" id="c-expmsg"></span>
+    </div>
+  </div>
+  <div class="tool" id="t-oval">
+    <div class="ctrl">
+      <div class="cg">
+        <div class="clabel">Width (blocks)</div>
+        <div class="row">
+          <button class="mcb" id="o-wdec">−</button>
+          <input class="numinput" type="number" id="o-w" value="31" min="3" max="121">
+          <button class="mcb" id="o-winc">+</button>
+        </div>
+      </div>
+      <div class="cg">
+        <div class="clabel">Height (blocks)</div>
+        <div class="row">
+          <button class="mcb" id="o-hdec">−</button>
+          <input class="numinput" type="number" id="o-h" value="21" min="3" max="121">
+          <button class="mcb" id="o-hinc">+</button>
+        </div>
+      </div>
+      <div class="cg">
+        <div class="clabel">Mode</div>
+        <div class="row">
+          <button class="tog on" id="o-mout">Outline</button>
+          <button class="tog" id="o-mfil">Filled</button>
+        </div>
+      </div>
+    </div>
+    <div class="stats" id="o-stats"></div>
+    <div class="zv-wrap">
+      <div class="gscroll"><div class="grid" id="o-grid"></div></div>
+      <div class="zv-panel">
+        <div class="zv-ctrl">
+          <button class="mcb" id="o-zm">−</button>
+          <span class="zv-lbl" id="o-zpct">20px</span>
+          <button class="mcb" id="o-zp">+</button>
+          <span class="zv-hint">drag to pan</span>
+        </div>
+        <canvas id="o-zv" style="cursor:grab;image-rendering:pixelated;border:1px solid #3a3a3a;display:block;"></canvas>
+      </div>
+    </div>
+    <div class="legend">
+      <div class="li"><div class="ls" style="background:#4ecf22"></div> Block to place</div>
+      <div class="li"><div class="ls" style="background:#236b12"></div> Fill</div>
+      <div class="li"><div class="ls" style="background:#585858"></div> Placed ✓</div>
+    </div>
+    <div class="export-bar">
+      <span class="blk-label">Block:</span>
+      <select class="blk-select" id="o-block"></select>
+      <button class="expbtn" id="o-export">⬇ Export .schem</button>
+      <span class="exp-msg" id="o-expmsg"></span>
+    </div>
+  </div>
+
+  <!-- SPHERE -->
+  <div class="tool" id="t-sphere">
+    <div class="ctrl">
+      <div class="cg">
+        <div class="clabel">Diameter (blocks)</div>
+        <div class="row">
+          <button class="mcb" id="sp-dec">−</button>
+          <input class="numinput" type="number" id="sp-d" value="21" min="3" max="49">
+          <button class="mcb" id="sp-inc">+</button>
+        </div>
+      </div>
+      <div class="cg" style="flex:1;min-width:190px">
+        <div class="clabel">Layer: <span class="rval" id="sp-ldisp">11 / 21</span></div>
+        <input type="range" id="sp-layer" min="1" max="21" value="11" style="width:200px">
+      </div>
+      <div class="cg">
+        <div class="clabel">Mode</div>
+        <div class="row">
+          <button class="tog on" id="sp-mhol">Hollow</button>
+          <button class="tog" id="sp-msol">Solid</button>
+        </div>
+      </div>
+      <div class="cg">
+        <div class="clabel">3D show</div>
+        <div class="row">
+          <button class="tog on" id="sp-cbelow">↓ Below</button>
+          <button class="tog" id="sp-cabove">↑ Above</button>
+        </div>
+      </div>
+    </div>
+    <div class="linfo" id="sp-linfo"></div>
+    <div class="stats" id="sp-stats"></div>
+    <div class="sp-body">
+      <canvas id="sp-canvas" style="cursor:pointer;flex-shrink:0;border:1px solid #3a3a3a;image-rendering:pixelated;"></canvas>
+      <div class="sp-3d-wrap">
+        <canvas id="sp-3d-canvas" width="290" height="290" style="max-width:100%;max-height:290px;"></canvas>
+        <div class="sp-3d-hint">drag to rotate</div>
+        <div style="display:flex;align-items:center;gap:8px;margin-top:4px;">
+          <span style="font-size:15px;color:#444;">Speed:</span>
+          <input type="range" id="sp-speed" min="0" max="10" value="4" style="width:100px;accent-color:#5ddf2f;">
+          <span style="font-size:15px;color:#555;" id="sp-speed-label">Normal</span>
+        </div>
+        <div class="sp-3d-key">
+          <span><i style="background:#3a8c1a"></i> Shell block</span>
+          <span><i style="background:#e8c030"></i> Current layer</span>
+          <span><i style="background:#4a4a4a"></i> Placed ✓</span>
+        </div>
+      </div>
+    </div>
+    <div class="legend">
+      <div class="li"><div class="ls" style="background:#4ecf22"></div> Block to place</div>
+      <div class="li"><div class="ls" style="background:#585858"></div> Placed ✓</div>
+      <div style="color:#888;font-size:15px;margin-left:.5rem">Each layer tracks progress independently</div>
+    </div>
+    <div class="export-bar">
+      <span class="blk-label">Block:</span>
+      <select class="blk-select" id="sp-block"></select>
+      <button class="expbtn" id="sp-export">⬇ Export .schem</button>
+      <span class="exp-msg" id="sp-expmsg"></span>
+    </div>
+  </div>
+
+  <!-- ARC -->
+  <div class="tool" id="t-arc">
+    <div class="ctrl">
+      <div class="cg">
+        <div class="clabel">Diameter (blocks)</div>
+        <div class="row">
+          <button class="mcb" id="a-dec">−</button>
+          <input class="numinput" type="number" id="a-d" value="21" min="3" max="101">
+          <button class="mcb" id="a-inc">+</button>
+        </div>
+      </div>
+      <div class="cg">
+        <div class="clabel">Start angle: <span class="rval" id="a-sdisp">0°</span></div>
+        <input type="range" id="a-start" min="0" max="359" value="0">
+      </div>
+      <div class="cg">
+        <div class="clabel">Arc length: <span class="rval" id="a-ldisp">90°</span></div>
+        <input type="range" id="a-len" min="1" max="360" value="90">
+      </div>
+    </div>
+    <div class="stats" id="a-stats"></div>
+    <div class="zv-wrap">
+      <div class="gscroll"><div class="grid" id="a-grid"></div></div>
+      <div class="zv-panel">
+        <div class="zv-ctrl">
+          <button class="mcb" id="a-zm">−</button>
+          <span class="zv-lbl" id="a-zpct">20px</span>
+          <button class="mcb" id="a-zp">+</button>
+          <span class="zv-hint">drag to pan</span>
+        </div>
+        <canvas id="a-zv" style="cursor:grab;image-rendering:pixelated;border:1px solid #3a3a3a;display:block;"></canvas>
+      </div>
+    </div>
+    <div class="legend">
+      <div class="li"><div class="ls" style="background:#4ecf22"></div> Block to place</div>
+      <div class="li"><div class="ls" style="background:#585858"></div> Placed ✓</div>
+      <div style="color:#333;font-size:15px;margin-left:.5rem">0° = right · 90° = up · counter-clockwise</div>
+    </div>
+    <div class="export-bar">
+      <span class="blk-label">Block:</span>
+      <select class="blk-select" id="a-block"></select>
+      <button class="expbtn" id="a-export">⬇ Export .schem</button>
+      <span class="exp-msg" id="a-expmsg"></span>
+    </div>
+  </div>
+  <!-- PIXEL ART -->
+  <div class="tool" id="t-pixelart">
+    <div class="ctrl">
+      <div class="cg">
+        <div class="clabel">Width</div>
+        <div class="row">
+          <button class="mcb" id="pa-wdec">−</button>
+          <input class="numinput" type="number" id="pa-w" value="32" min="1" max="256">
+          <button class="mcb" id="pa-winc">+</button>
+        </div>
+      </div>
+      <div class="cg">
+        <div class="clabel">Height</div>
+        <div class="row">
+          <button class="mcb" id="pa-hdec">−</button>
+          <input class="numinput" type="number" id="pa-h" value="32" min="1" max="256">
+          <button class="mcb" id="pa-hinc">+</button>
+        </div>
+      </div>
+      <div class="cg">
+        <div class="clabel">Tool</div>
+        <div class="row">
+          <button class="tog on" id="pa-brush">✏️ Brush</button>
+          <button class="tog" id="pa-fill">🪣 Fill</button>
+          <button class="tog" id="pa-erase">🧹 Erase</button>
+        </div>
+      </div>
+      <div class="cg">
+        <div class="clabel">View</div>
+        <div class="row">
+          <button class="tog on" id="pa-grid-on">Grid</button>
+          <button class="tog" id="pa-grid-off">Clean</button>
+        </div>
+      </div>
+      <div class="cg">
+        <div class="clabel">Image</div>
+        <label class="pa-upload-btn">📷 Upload<input type="file" id="pa-upload" accept="image/*" style="display:none"></label>
+      </div>
+    </div>
+    <div class="stats" id="pa-stats"></div>
+    <div class="pa-layout">
+      <div class="gscroll"><canvas id="pa-canvas"></canvas></div>
+      <div class="pa-palette-wrap">
+        <div class="clabel" style="margin-bottom:4px">Brush: <span id="pa-sel-name" style="color:#5ddf2f">white concrete</span></div>
+        <div class="pa-palette" id="pa-palette"></div>
+      </div>
+    </div>
+    <div class="export-bar">
+      <button class="expbtn" id="pa-export">⬇ Export .schem</button>
+      <button class="expbtn" id="pa-clear" style="background:#200e0e;color:#d46060;border-color:#5a1f1f;border-bottom-color:#110404;border-right-color:#110404;">🗑 Clear</button>
+      <span class="exp-msg" id="pa-expmsg"></span>
+    </div>
+  </div>
+
+</div>
+
+</div> style="max-width:960px;margin:0 auto;padding:0 1rem 2rem">
+  <div id="footer">
+    <a onclick="document.getElementById('about-overlay').classList.add('show')">About</a>
+    <a onclick="document.getElementById('privacy-overlay').classList.add('show')">Privacy Policy</a>
+    <a onclick="document.getElementById('contact-overlay').classList.add('show')">Contact</a>
+    <span class="copy">© 2025 blocksmith.tools</span>
+  </div>
+</div>
+
+<script>
+document.querySelectorAll('.info-overlay').forEach(el=>{
+  el.addEventListener('click',e=>{if(e.target===el)el.classList.remove('show');});
+});
+
+const S={
+  circle:{d:21,mode:'outline',ck:new Set(),grid:null,zv:{cs:20,ox:0,oy:0}},
+  oval:{w:31,h:21,mode:'outline',ck:new Set(),grid:null,zv:{cs:20,ox:0,oy:0}},
+  sphere:{d:21,layer:11,mode:'hollow',cut:'below',ck:{}},
+  arc:{d:21,start:0,len:90,ck:new Set(),grid:null,zv:{cs:20,ox:0,oy:0}},
+};
+
+// Fill a disc: every block whose center is inside the circle
+function diskInside(d){
+  const R=d/2,g=Array.from({length:d},()=>new Uint8Array(d));
+  for(let y=0;y<d;y++){
+    const dy=y+.5-R,dx2=R*R-dy*dy;
+    if(dx2<=0)continue;
+    const dx=Math.sqrt(dx2);
+    const x0=Math.max(0,Math.ceil(R-dx-.5)),x1=Math.min(d-1,Math.floor(R+dx-.5));
+    for(let x=x0;x<=x1;x++)g[y][x]=1;
+  }
+  return g;
+}
+// Outline = filled blocks that have at least one empty 4-neighbor
+function outlineOf(inside,rows,cols){
+  const g=Array.from({length:rows},()=>new Uint8Array(cols));
+  const has=(y,x)=>y>=0&&y<rows&&x>=0&&x<cols&&inside[y][x];
+  for(let y=0;y<rows;y++)for(let x=0;x<cols;x++){
+    if(!inside[y][x])continue;
+    if(!has(y-1,x)||!has(y+1,x)||!has(y,x-1)||!has(y,x+1))g[y][x]=1;
+  }
+  return g;
+}
+function circleGrid(d){return outlineOf(diskInside(d),d,d);}
+// For filled mode: 1=outline, 2=interior
+function diskFill(d){
+  const ins=diskInside(d),g=Array.from({length:d},()=>new Uint8Array(d));
+  const has=(y,x)=>y>=0&&y<d&&x>=0&&x<d&&ins[y][x];
+  for(let y=0;y<d;y++)for(let x=0;x<d;x++){
+    if(!ins[y][x])continue;
+    g[y][x]=(!has(y-1,x)||!has(y+1,x)||!has(y,x-1)||!has(y,x+1))?1:2;
+  }
+  return g;
+}
+
+function ellipseInside(w,h){
+  const a=w/2,b=h/2,g=Array.from({length:h},()=>new Uint8Array(w));
+  for(let y=0;y<h;y++){
+    const dy=y+.5-b,dx2=a*a*(1-dy*dy/(b*b));
+    if(dx2<=0)continue;
+    const dx=Math.sqrt(dx2);
+    const x0=Math.max(0,Math.ceil(a-dx-.5)),x1=Math.min(w-1,Math.floor(a+dx-.5));
+    for(let x=x0;x<=x1;x++)g[y][x]=1;
+  }
+  return g;
+}
+function ellipseGrid(w,h){return outlineOf(ellipseInside(w,h),h,w);}
+function ellipseFill(w,h){
+  const ins=ellipseInside(w,h),g=Array.from({length:h},()=>new Uint8Array(w));
+  const has=(y,x)=>y>=0&&y<h&&x>=0&&x<w&&ins[y][x];
+  for(let y=0;y<h;y++)for(let x=0;x<w;x++){
+    if(!ins[y][x])continue;
+    g[y][x]=(!has(y-1,x)||!has(y+1,x)||!has(y,x-1)||!has(y,x+1))?1:2;
+  }
+  return g;
+}
+
+function sphereLayerGrid(D,layer1){
+  const R=D/2,dy=layer1-0.5-R,rl2=R*R-dy*dy;
+  if(rl2<=0)return Array.from({length:D},()=>new Uint8Array(D));
+  const rl=Math.sqrt(rl2);
+  const g=Array.from({length:D},()=>new Uint8Array(D));
+  const cx=R,cy=R;
+  const mk=(y,x)=>{if(y>=0&&y<D&&x>=0&&x<D)g[y][x]=1;};
+  for(let y=0;y<D;y++){const ddy=y+.5-cy,ddx2=rl*rl-ddy*ddy;if(ddx2<0)continue;const ddx=Math.sqrt(ddx2);mk(y,Math.floor(cx-ddx));mk(y,Math.ceil(cx+ddx)-1);}
+  for(let x=0;x<D;x++){const ddx=x+.5-cx,ddy2=rl*rl-ddx*ddx;if(ddy2<0)continue;const ddy=Math.sqrt(ddy2);mk(Math.floor(cy-ddy),x);mk(Math.ceil(cy+ddy)-1,x);}
+  return g;
+}
+function arcGrid(d,startDeg,lenDeg){
+  const ol=circleGrid(d),g=Array.from({length:d},()=>new Uint8Array(d)),cx=d/2,cy=d/2;
+  for(let y=0;y<d;y++)for(let x=0;x<d;x++){
+    if(!ol[y][x])continue;
+    if(lenDeg>=360){g[y][x]=1;continue;}
+    let a=Math.atan2(-(y+.5-cy),x+.5-cx)*180/Math.PI;
+    if(a<0)a+=360;
+    if(((a-startDeg)%360+360)%360<=lenDeg)g[y][x]=1;
+  }
+  return g;
+}
+
+function cellSz(rows,cols){
+  return Math.max(4,Math.min(26,Math.floor(540/Math.max(rows,cols))));
+}
+// Sphere uses a stored fixed cell size — computed once per diameter change
+let spFixedCs=20;
+function sphereCellSz(d){return spFixedCs=Math.max(4,Math.min(22,Math.floor(420/d)));}
+
+function renderGrid(gridId,logicalGrid,rows,cols,getCk,statsId,extra,classMap,selId,fixedCs){
+  classMap=classMap||{1:'outline',2:'fill'};
+  const gridEl=document.getElementById(gridId);
+  const statsEl=document.getElementById(statsId);
+  const cs=fixedCs||cellSz(rows,cols);
+  gridEl.style.setProperty('--cs',cs+'px');
+  gridEl.style.gridTemplateColumns=`repeat(${cols},${cs}px)`;
+  gridEl.style.gridTemplateRows=`repeat(${rows},${cs}px)`;
+  gridEl.style.display='inline-grid';
+  gridEl.innerHTML='';
+  let total=0;
+  const ck=()=>typeof getCk==='function'?getCk():getCk;
+  function updStats(){
+    const p=ck().size,rem=Math.max(0,total-p);
+    statsEl.innerHTML=`<div class="stat">Blocks: <b>${total}</b></div><div class="stat">Placed: <b>${p}</b></div><div class="stat">Remaining: <b>${rem}</b></div>`+(extra||'');
+  }
+  for(let y=0;y<rows;y++){
+    for(let x=0;x<cols;x++){
+      const v=logicalGrid[y][x];
+      const el=document.createElement('div');
+      el.className='cell';el.style.width=el.style.height=cs+'px';
+      const key=`${y},${x}`;
+      if(v>0){
+        total++;
+        if(selId)applyBlockStyle(el,v,selId);
+        else el.classList.add(classMap[v]||'outline');
+        if(ck().has(key)){
+          el.classList.add('done');
+          el.style.background='';
+          el.style.backgroundImage='';
+          el.style.backgroundSize='';
+          el.style.opacity='1';
+        }
+        el.addEventListener('click',()=>{
+          if(ck().has(key)){
+            ck().delete(key);
+            el.classList.remove('done');
+            if(selId)applyBlockStyle(el,v,selId);
+          } else {
+            ck().add(key);
+            el.classList.add('done');
+            el.style.background='';
+            el.style.backgroundImage='';
+            el.style.backgroundSize='';
+            el.style.opacity='1';
+          }
+          updStats();
+          if(sp3d)sp3d.rebuild();
+        });
+      }else{
+        el.classList.add('air');
+        el.style.minWidth=cs+'px';
+        el.style.minHeight=cs+'px';
+      }
+      gridEl.appendChild(el);
+    }
+  }
+  updStats();
+}
+
+function rCircle(){
+  const{d,mode}=S.circle;
+  document.getElementById('c-d').value=d;
+  const g=document.getElementById('c-grid');g.style.width='';g.style.height='';
+  const grid=mode==='filled'?diskFill(d):circleGrid(d);
+  S.circle.grid=grid;
+  renderGrid('c-grid',grid,d,d,()=>S.circle.ck,'c-stats',`<div class="stat">Ø <b>${d}</b></div>`,null,'c-block');
+  renderZV('c-zv',grid,d,d,()=>S.circle.ck,'c-block',S.circle.zv);
+}
+function rOval(){
+  const{w,h,mode}=S.oval;
+  document.getElementById('o-w').value=w;document.getElementById('o-h').value=h;
+  const g=document.getElementById('o-grid');g.style.width='';g.style.height='';
+  const grid=mode==='filled'?ellipseFill(w,h):ellipseGrid(w,h);
+  S.oval.grid=grid;
+  renderGrid('o-grid',grid,h,w,()=>S.oval.ck,'o-stats',`<div class="stat"><b>${w}×${h}</b></div>`,null,'o-block');
+  renderZV('o-zv',grid,h,w,()=>S.oval.ck,'o-block',S.oval.zv);
+}
+function rArc(){
+  const{d,start,len}=S.arc;
+  document.getElementById('a-d').value=d;
+  document.getElementById('a-sdisp').textContent=start+'°';
+  document.getElementById('a-ldisp').textContent=len+'°';
+  const g=document.getElementById('a-grid');g.style.width='';g.style.height='';
+  const grid=arcGrid(d,start,len);
+  S.arc.grid=grid;
+  renderGrid('a-grid',grid,d,d,()=>S.arc.ck,'a-stats',`<div class="stat">Arc: <b>${len}°</b></div>`,null,'a-block');
+  renderZV('a-zv',grid,d,d,()=>S.arc.ck,'a-block',S.arc.zv);
+}
+function rSphere(){
+  const{d,mode}=S.sphere;
+  const layer=Math.min(S.sphere.layer,d);S.sphere.layer=layer;
+  document.getElementById('sp-d').value=d;
+  const sl=document.getElementById('sp-layer');sl.max=d;sl.value=layer;
+  document.getElementById('sp-ldisp').textContent=`${layer} / ${d}`;
+  const R=d/2,dy=layer-0.5-R,rl=Math.sqrt(Math.max(0,R*R-dy*dy));
+  document.getElementById('sp-linfo').innerHTML=`Layer <em>${layer}</em> of <em>${d}</em> — cross-section radius: <em>${rl.toFixed(1)}</em> blocks`;
+  if(!S.sphere.ck[layer])S.sphere.ck[layer]=new Set();
+  const shell=shellLayerGrid(d,layer);
+  const layerGrid=mode==='solid'?fillShellLayer(shell,d):shell;
+  renderSpherCanvas(layerGrid,d);
+  if(sp3d)sp3d.rebuild();else initSp3D();
+}
+
+function renderSpherCanvas(logicalGrid,d){
+  const CS=Math.max(4,Math.min(26,Math.floor(540/d)));
+  const GAP=1;
+  const SIZE=d*(CS+GAP)-GAP;
+
+  // Clone first to remove stale click listeners, THEN draw on the new canvas
+  const old=document.getElementById('sp-canvas');
+  const canvas=old.cloneNode(false);
+  old.parentNode.replaceChild(canvas,old);
+
+  canvas.width=SIZE;canvas.height=SIZE;
+  canvas.style.width=SIZE+'px';canvas.style.height=SIZE+'px';
+  const ctx=canvas.getContext('2d');
+  const{isDefault,rawId,color}=getBlockConfig('sp-block');
+  const isGlass=GLASS_IDS.has(rawId);
+  const ckSet=()=>S.sphere.ck[S.sphere.layer]||(S.sphere.ck[S.sphere.layer]=new Set());
+
+  for(let row=0;row<d;row++){
+    for(let col=0;col<d;col++){
+      const v=logicalGrid[row][col];
+      const px=col*(CS+GAP),py=row*(CS+GAP);
+      const key=`${row},${col}`;
+      const done=ckSet().has(key);
+
+      if(done){
+        ctx.fillStyle='#585858';ctx.fillRect(px,py,CS,CS);
+        ctx.fillStyle='rgba(255,255,255,0.5)';
+        ctx.font=`bold ${Math.floor(CS*0.7)}px sans-serif`;
+        ctx.textAlign='center';ctx.textBaseline='middle';
+        ctx.fillText('✓',px+CS/2,py+CS/2+1);
+      } else if(v>0){
+        if(isDefault){
+          ctx.fillStyle=v===2?'#236b12':'#4ecf22';ctx.fillRect(px,py,CS,CS);
+          ctx.fillStyle='rgba(255,255,255,0.2)';ctx.fillRect(px,py,CS,2);ctx.fillRect(px,py,2,CS);
+          ctx.fillStyle='rgba(0,0,0,0.3)';ctx.fillRect(px+CS-2,py,2,CS);ctx.fillRect(px,py+CS-2,CS,2);
+        } else {
+          ctx.fillStyle=color||'#888';ctx.fillRect(px,py,CS,CS);
+          const url=PA_CDN+rawId+'.png';
+          const img=new Image();
+          (function(px2,py2){
+            img.onload=()=>{
+              if(isGlass)ctx.globalAlpha=0.8;
+              ctx.drawImage(img,px2,py2,CS,CS);
+              ctx.globalAlpha=1;
+            };
+          })(px,py);
+          img.src=url;
+          ctx.fillStyle='rgba(0,0,0,0.3)';ctx.fillRect(px+CS-2,py,2,CS);ctx.fillRect(px,py+CS-2,CS,2);
+          ctx.fillStyle='rgba(255,255,255,0.2)';ctx.fillRect(px,py,CS,2);ctx.fillRect(px,py,2,CS);
+        }
+      } else {
+        ctx.fillStyle='#252525';ctx.fillRect(px,py,CS,CS);
+      }
+    }
+  }
+
+  // Stats
+  let total=0,placed=0;
+  for(let r=0;r<d;r++)for(let c=0;c<d;c++)if(logicalGrid[r][c]){total++;if(ckSet().has(`${r},${c}`))placed++;}
+  const rl=(Math.sqrt(Math.max(0,(d/2)**2-(S.sphere.layer-0.5-d/2)**2))).toFixed(1);
+  document.getElementById('sp-stats').innerHTML=
+    `<div class="stat">Blocks: <b>${total}</b></div><div class="stat">Placed: <b>${placed}</b></div><div class="stat">Remaining: <b>${total-placed}</b></div><div class="stat">r: <b>${rl}</b></div>`;
+
+  // Click handler on the new canvas
+  canvas.addEventListener('click',e=>{
+    const rect=canvas.getBoundingClientRect();
+    const scaleX=canvas.width/rect.width,scaleY=canvas.height/rect.height;
+    const col=Math.floor((e.clientX-rect.left)*scaleX/(CS+GAP));
+    const row=Math.floor((e.clientY-rect.top)*scaleY/(CS+GAP));
+    if(row<0||row>=d||col<0||col>=d||!logicalGrid[row][col])return;
+    const key=`${row},${col}`;
+    const ck=S.sphere.ck[S.sphere.layer]||(S.sphere.ck[S.sphere.layer]=new Set());
+    if(ck.has(key))ck.delete(key);else ck.add(key);
+    renderSpherCanvas(logicalGrid,d);
+    if(sp3d)sp3d.rebuild();
+  });
+}
+
+// Fill the interior of a shell layer — same grid size, just adds interior blocks
+function fillShellLayer(shell,D){
+  const g=shell.map(r=>new Uint8Array(r));
+  for(let row=0;row<D;row++){
+    let inside=false;
+    for(let col=0;col<D;col++){
+      if(shell[row][col]){inside=true;continue;}
+      if(inside){
+        let hasRight=false;
+        for(let c=col;c<D;c++)if(shell[row][c]){hasRight=true;break;}
+        if(hasRight)g[row][col]=2;else inside=false;
+      }
+    }
+  }
+  return g;
+}
+function solidLayerGrid(D,layer1){
+  const R=D/2,dy=layer1-0.5-R,rl2=R*R-dy*dy;
+  if(rl2<=0)return Array.from({length:D},()=>new Uint8Array(D));
+  const rl=Math.sqrt(rl2);
+  const g=Array.from({length:D},()=>new Uint8Array(D));
+  const cx=R,cz=R;
+  for(let z=0;z<D;z++){
+    const dz=z+.5-cz,ddx2=rl*rl-dz*dz;
+    if(ddx2<0)continue;
+    const ddx=Math.sqrt(ddx2);
+    // Small epsilon prevents floating-point edge blocks from appearing outside the true circle
+    const x0=Math.ceil(cx-ddx+1e-9),x1=Math.floor(cx+ddx-1e-9);
+    for(let x=x0;x<=x1;x++)if(x>=0&&x<D)g[z][x]=1;
+  }
+  return g;
+}
+
+// True 3D shell: block is on surface if inside sphere but has ≥1 face-neighbor outside
+function buildShell3D(D){
+  const R=D/2,cx=R,cy=R,cz=R;
+  const inside=(x,y,z)=>{const dx=x+.5-cx,dy=y+.5-cy,dz=z+.5-cz;return dx*dx+dy*dy+dz*dz<=R*R;};
+  const dirs=[[-1,0,0],[1,0,0],[0,-1,0],[0,1,0],[0,0,-1],[0,0,1]];
+  const shell=new Set();
+  for(let y=0;y<D;y++)for(let z=0;z<D;z++)for(let x=0;x<D;x++){
+    if(!inside(x,y,z))continue;
+    for(const[dx,dy,dz]of dirs){if(!inside(x+dx,y+dy,z+dz)){shell.add(`${x},${y},${z}`);break;}}
+  }
+  return shell;
+}
+
+function getShell(D){
+  if(cachedShellD!==D){cachedShell=buildShell3D(D);cachedShellD=D;}
+  return cachedShell;
+}
+
+// Extract shell slice for layer (1-based) as 2D grid[z][x]
+function shellLayerGrid(D,layer1){
+  const shell=getShell(D),iy=layer1-1;
+  const g=Array.from({length:D},()=>new Uint8Array(D));
+  for(let z=0;z<D;z++)for(let x=0;x<D;x++){if(shell.has(`${x},${iy},${z}`))g[z][x]=1;}
+  return g;
+}
+
+
+let sp3d=null;
+let cachedShell=null,cachedShellD=-1;
+
+function initSp3D(){
+  if(sp3d){sp3d.dispose();}
+  const canvas=document.getElementById('sp-3d-canvas');
+  const d=S.sphere.d;
+  const size=Math.max(180,Math.min(290,d*12));
+  canvas.width=size;canvas.height=size;
+  canvas.style.width=size+'px';canvas.style.height=size+'px';
+  const W=size,H=size;
+  const renderer=new THREE.WebGLRenderer({canvas,antialias:true});
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+  renderer.setSize(W,H);renderer.setClearColor(0x222222,1);
+
+  const scene=new THREE.Scene();
+  const camera=new THREE.PerspectiveCamera(42,W/H,0.1,2000);
+
+  scene.add(new THREE.AmbientLight(0xffffff,0.5));
+  const sun=new THREE.DirectionalLight(0xffffff,0.9);sun.position.set(3,4,5);scene.add(sun);
+  const back=new THREE.DirectionalLight(0x3366cc,0.25);back.position.set(-2,-1,-3);scene.add(back);
+
+  const geo=new THREE.BoxGeometry(0.86,0.86,0.86);
+  const mShell=new THREE.MeshLambertMaterial({color:0x3a8c1a});
+  const mLayer=new THREE.MeshLambertMaterial({color:0xe8c030});
+  const mDone =new THREE.MeshLambertMaterial({color:0x484848});
+
+  function updateMaterials(){
+    const{isDefault,rawId,color}=getBlockConfig('sp-block');
+    const isGlass=GLASS_IDS.has(rawId);
+    if(!isDefault&&color){
+      mShell.color.set(color);
+      mShell.transparent=isGlass;mShell.opacity=isGlass?0.8:1;mShell.needsUpdate=true;
+    }else{
+      mShell.color.set(0x3a8c1a);mShell.transparent=false;mShell.opacity=1;mShell.needsUpdate=true;
+    }
+    mLayer.color.set(0xe8c030);mDone.color.set(0x484848);
+  }
+
+  const group=new THREE.Group();scene.add(group);
+  const dummy=new THREE.Object3D();
+  let meshes=[];
+
+  function clearMeshes(){
+    meshes.forEach(m=>{group.remove(m);m.dispose();});
+    meshes=[];
+  }
+  function addMesh(arr,mat){
+    if(!arr.length)return;
+    const im=new THREE.InstancedMesh(geo,mat,arr.length);
+    for(let i=0;i<arr.length;i++){
+      dummy.position.set(arr[i][0],arr[i][1],arr[i][2]);
+      dummy.updateMatrix();im.setMatrixAt(i,dummy.matrix);
+    }
+    im.instanceMatrix.needsUpdate=true;
+    group.add(im);meshes.push(im);
+  }
+
+
+  function rebuild(){
+    clearMeshes();
+    updateMaterials();
+    const D=S.sphere.d,cur=S.sphere.layer,solid=S.sphere.mode==='solid',below=S.sphere.cut==='below';
+    camera.position.set(0,0,D*1.75);camera.lookAt(0,0,0);
+    const normal=[],layer=[],done=[];
+    const shell=solid?null:getShell(D);
+    for(let ly=1;ly<=D;ly++){
+      if(below ? ly>cur : ly<cur) continue;
+      const iy=ly-1;
+      const ck=S.sphere.ck[ly]||new Set();
+      const by=ly-D/2-0.5;
+      if(solid){
+        const g=solidLayerGrid(D,ly);
+        for(let z=0;z<D;z++)for(let x=0;x<D;x++){
+          if(!g[z][x])continue;
+          const pt=[x-D/2+.5,by,z-D/2+.5];
+          const key=`${z},${x}`;
+          if(ck.has(key))done.push(pt);
+          else if(ly===cur)layer.push(pt);
+          else normal.push(pt);
+        }
+      } else {
+        for(let z=0;z<D;z++)for(let x=0;x<D;x++){
+          if(!shell.has(`${x},${iy},${z}`))continue;
+          const pt=[x-D/2+.5,by,z-D/2+.5];
+          const key=`${z},${x}`;
+          if(ck.has(key))done.push(pt);
+          else if(ly===cur)layer.push(pt);
+          else normal.push(pt);
+        }
+      }
+    }
+    addMesh(normal,mShell);
+    addMesh(layer,mLayer);
+    addMesh(done,mDone);
+  }
+
+
+  // Rotation / drag
+  let rotX=0.38,rotY=0.4,drag=false,lx=0,ly=0,autoSpin=true;
+
+  canvas.addEventListener('mousedown',e=>{drag=true;autoSpin=false;lx=e.clientX;ly=e.clientY;});
+  window.addEventListener('mouseup',()=>drag=false);
+  window.addEventListener('mousemove',e=>{
+    if(!drag)return;
+    rotY+=(e.clientX-lx)*.013;rotX+=(e.clientY-ly)*.013;
+    rotX=Math.max(-1.5,Math.min(1.5,rotX));lx=e.clientX;ly=e.clientY;
+  });
+  canvas.addEventListener('touchstart',e=>{drag=true;autoSpin=false;lx=e.touches[0].clientX;ly=e.touches[0].clientY;e.preventDefault();},{passive:false});
+  window.addEventListener('touchend',()=>drag=false);
+  window.addEventListener('touchmove',e=>{
+    if(!drag)return;
+    rotY+=(e.touches[0].clientX-lx)*.013;rotX+=(e.touches[0].clientY-ly)*.013;
+    rotX=Math.max(-1.5,Math.min(1.5,rotX));lx=e.touches[0].clientX;ly=e.touches[0].clientY;
+  });
+
+  rebuild();
+
+  let raf;
+  (function animate(){
+    raf=requestAnimationFrame(animate);
+    if(autoSpin){
+      const spd=+(document.getElementById('sp-speed')?.value||4);
+      rotY+=spd*0.0015;
+    }
+    group.rotation.set(rotX,rotY,0);
+    renderer.render(scene,camera);
+  })();
+
+  document.getElementById('sp-speed')?.addEventListener('input',e=>{
+    const v=+e.target.value;
+    const lbl=document.getElementById('sp-speed-label');
+    if(lbl)lbl.textContent=v===0?'Paused':v<=2?'Slow':v<=5?'Normal':v<=8?'Fast':'Max';
+  });
+
+  sp3d={
+    rebuild,
+    updateMaterials,
+    dispose(){
+      cancelAnimationFrame(raf);
+      clearMeshes();
+      geo.dispose();mShell.dispose();mLayer.dispose();mDone.dispose();
+      renderer.dispose();
+      sp3d=null;
+    }
+  };
+}
+
+// ── Tabs ──
+const Rs={circle:rCircle,oval:rOval,sphere:rSphere,arc:rArc,pixelart:()=>{renderPA();renderPAPalette();},machines:showMachinesPage};
+document.getElementById('tabnav').addEventListener('click',e=>{
+  const tab=e.target.closest('.tab');if(!tab)return;
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tool').forEach(p=>p.classList.remove('active'));
+  tab.classList.add('active');
+  document.getElementById('t-'+tab.dataset.t).classList.add('active');
+  Rs[tab.dataset.t]();
+});
+
+// ── Helpers ──
+function clamp(v,lo,hi){return Math.max(lo,Math.min(hi,Math.round(v)));}
+function numInput(id,lo,hi,get,set,render){
+  const el=document.getElementById(id);
+  document.getElementById(id.replace(/-[dwh]$/,'')+'-dec')||null; // unused ref
+  el.addEventListener('change',()=>{
+    const v=clamp(+el.value,lo,hi);
+    if(v!==get()){set(v);render();}else el.value=v;
+  });
+}
+
+// Circle events
+document.getElementById('c-dec').onclick=()=>{if(S.circle.d>3){S.circle.d--;S.circle.ck=new Set();zvCenter(S.circle.zv,S.circle.d);rCircle();}};
+document.getElementById('c-inc').onclick=()=>{if(S.circle.d<101){S.circle.d++;S.circle.ck=new Set();zvCenter(S.circle.zv,S.circle.d);rCircle();}};
+document.getElementById('c-d').addEventListener('change',()=>{
+  const v=clamp(+document.getElementById('c-d').value,3,101);
+  S.circle.d=v;S.circle.ck=new Set();zvCenter(S.circle.zv,v);rCircle();
+});
+document.getElementById('c-mout').onclick=()=>{S.circle.mode='outline';S.circle.ck=new Set();document.getElementById('c-mout').classList.add('on');document.getElementById('c-mfil').classList.remove('on');rCircle();};
+document.getElementById('c-mfil').onclick=()=>{S.circle.mode='filled';S.circle.ck=new Set();document.getElementById('c-mfil').classList.add('on');document.getElementById('c-mout').classList.remove('on');rCircle();};
+
+// Oval events
+document.getElementById('o-wdec').onclick=()=>{if(S.oval.w>3){S.oval.w--;S.oval.ck=new Set();zvCenter(S.oval.zv,Math.max(S.oval.w,S.oval.h));rOval();}};
+document.getElementById('o-winc').onclick=()=>{if(S.oval.w<121){S.oval.w++;S.oval.ck=new Set();zvCenter(S.oval.zv,Math.max(S.oval.w,S.oval.h));rOval();}};
+document.getElementById('o-hdec').onclick=()=>{if(S.oval.h>3){S.oval.h--;S.oval.ck=new Set();zvCenter(S.oval.zv,Math.max(S.oval.w,S.oval.h));rOval();}};
+document.getElementById('o-hinc').onclick=()=>{if(S.oval.h<121){S.oval.h++;S.oval.ck=new Set();zvCenter(S.oval.zv,Math.max(S.oval.w,S.oval.h));rOval();}};
+document.getElementById('o-w').addEventListener('change',()=>{
+  S.oval.w=clamp(+document.getElementById('o-w').value,3,121);S.oval.ck=new Set();rOval();
+});
+document.getElementById('o-h').addEventListener('change',()=>{
+  S.oval.h=clamp(+document.getElementById('o-h').value,3,121);S.oval.ck=new Set();rOval();
+});
+document.getElementById('o-mout').onclick=()=>{S.oval.mode='outline';S.oval.ck=new Set();document.getElementById('o-mout').classList.add('on');document.getElementById('o-mfil').classList.remove('on');rOval();};
+document.getElementById('o-mfil').onclick=()=>{S.oval.mode='filled';S.oval.ck=new Set();document.getElementById('o-mfil').classList.add('on');document.getElementById('o-mout').classList.remove('on');rOval();};
+
+// Sphere events
+document.getElementById('sp-dec').onclick=()=>{if(S.sphere.d>3){S.sphere.d--;S.sphere.ck={};cachedShellD=-1;if(sp3d)sp3d.dispose();rSphere();}};
+document.getElementById('sp-inc').onclick=()=>{if(S.sphere.d<49){S.sphere.d++;S.sphere.ck={};cachedShellD=-1;if(sp3d)sp3d.dispose();rSphere();}};
+document.getElementById('sp-d').addEventListener('change',()=>{
+  const v=clamp(+document.getElementById('sp-d').value,3,49);
+  S.sphere.d=v;S.sphere.ck={};cachedShellD=-1;if(sp3d)sp3d.dispose();rSphere();
+});
+document.getElementById('sp-layer').addEventListener('input',e=>{S.sphere.layer=+e.target.value;rSphere();});
+document.getElementById('sp-mhol').onclick=()=>{S.sphere.mode='hollow';S.sphere.ck={};document.getElementById('sp-mhol').classList.add('on');document.getElementById('sp-msol').classList.remove('on');rSphere();};
+document.getElementById('sp-msol').onclick=()=>{S.sphere.mode='solid';S.sphere.ck={};document.getElementById('sp-msol').classList.add('on');document.getElementById('sp-mhol').classList.remove('on');rSphere();};
+document.getElementById('sp-cbelow').onclick=()=>{S.sphere.cut='below';document.getElementById('sp-cbelow').classList.add('on');document.getElementById('sp-cabove').classList.remove('on');if(sp3d)sp3d.rebuild();};
+document.getElementById('sp-cabove').onclick=()=>{S.sphere.cut='above';document.getElementById('sp-cabove').classList.add('on');document.getElementById('sp-cbelow').classList.remove('on');if(sp3d)sp3d.rebuild();};
+
+// Arc events
+document.getElementById('a-dec').onclick=()=>{if(S.arc.d>3){S.arc.d--;S.arc.ck=new Set();zvCenter(S.arc.zv,S.arc.d);rArc();}};
+document.getElementById('a-inc').onclick=()=>{if(S.arc.d<101){S.arc.d++;S.arc.ck=new Set();zvCenter(S.arc.zv,S.arc.d);rArc();}};
+document.getElementById('a-d').addEventListener('change',()=>{
+  S.arc.d=clamp(+document.getElementById('a-d').value,3,101);S.arc.ck=new Set();rArc();
+});
+document.getElementById('a-start').addEventListener('input',e=>{S.arc.start=+e.target.value;S.arc.ck=new Set();rArc();});
+document.getElementById('a-len').addEventListener('input',e=>{S.arc.len=+e.target.value;S.arc.ck=new Set();rArc();});
+
+// ── Block texture system ─────────────────────────────────────
+function getBlockConfig(selId){
+  const val=document.getElementById(selId).value;
+  const id=val.replace('minecraft:','');
+  return{id:val,rawId:id,color:PA_BLOCKS[id]||null,isDefault:val==='minecraft:lime_concrete'};
+}
+
+const GLASS_IDS=new Set(['glass','white_stained_glass','orange_stained_glass','magenta_stained_glass','light_blue_stained_glass','yellow_stained_glass','lime_stained_glass','pink_stained_glass','gray_stained_glass','light_gray_stained_glass','cyan_stained_glass','purple_stained_glass','blue_stained_glass','brown_stained_glass','green_stained_glass','red_stained_glass','black_stained_glass']);
+
+function applyBlockStyle(el,v,selId){
+  const{isDefault,rawId,color}=getBlockConfig(selId);
+  if(isDefault){el.classList.add(v===2?'fill':'outline');return;}
+  el.style.background=color||'#888';
+  el.style.backgroundImage=`url(${PA_CDN}${rawId}.png)`;
+  el.style.backgroundSize='cover';
+  el.style.imageRendering='pixelated';
+  el.style.boxShadow='inset -2px -2px 0 rgba(0,0,0,.4),inset 1px 1px 0 rgba(255,255,255,.2)';
+  if(GLASS_IDS.has(rawId))el.style.opacity='0.8';
+}
+
+function populateBlockSelects(){
+  ['c-block','o-block','sp-block','a-block'].forEach(selId=>{
+    const sel=document.getElementById(selId);
+    const def=document.createElement('option');def.value='minecraft:lime_concrete';def.textContent='🟢 Default Green';sel.appendChild(def);
+    Object.entries(PA_BLOCKS).forEach(([id])=>{
+      const opt=document.createElement('option');
+      opt.value='minecraft:'+id;
+      opt.textContent=id.replace(/_/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
+      sel.appendChild(opt);
+    });
+    sel.addEventListener('change',()=>{
+      if(selId==='c-block')rCircle();
+      else if(selId==='o-block')rOval();
+      else if(selId==='sp-block'){rSphere();if(sp3d)sp3d.rebuild();}
+      else if(selId==='a-block')rArc();
+    });
+  });
+}
+
+// ── NBT writer ──────────────────────────────────────────────
+class NBT{
+  constructor(){this.b=[];}
+  u8(v){this.b.push(v&0xFF);}
+  i16(v){this.b.push((v>>8)&0xFF,v&0xFF);}
+  i32(v){this.b.push((v>>>24)&0xFF,(v>>>16)&0xFF,(v>>>8)&0xFF,v&0xFF);}
+  str(s){const e=new TextEncoder().encode(s);this.i16(e.length);e.forEach(b=>this.u8(b));}
+  tShort(name,v){this.u8(2);this.str(name);this.i16(v);}
+  tInt(name,v){this.u8(3);this.str(name);this.i32(v);}
+  tStr(name,v){this.u8(8);this.str(name);this.str(v);}
+  tByteArr(name,arr){this.u8(7);this.str(name);this.i32(arr.length);arr.forEach(v=>this.u8(v));}
+  beginCompound(name){this.u8(10);this.str(name);}
+  beginList(name,type,len){this.u8(9);this.str(name);this.u8(type);this.i32(len);}
+  end(){this.u8(0);}
+  bytes(){return new Uint8Array(this.b);}
+}
+function varint(arr,v){while(true){if((v&~0x7F)===0){arr.push(v);return;}arr.push((v&0x7F)|0x80);v>>>=7;}}
+
+async function gzipData(data){
+  const cs=new CompressionStream('gzip');
+  const w=cs.writable.getWriter();w.write(data);w.close();
+  const chunks=[];const r=cs.readable.getReader();
+  while(true){const{done,value}=await r.read();if(done)break;chunks.push(value);}
+  const total=chunks.reduce((s,c)=>s+c.length,0);
+  const out=new Uint8Array(total);let off=0;
+  for(const c of chunks){out.set(c,off);off+=c.length;}
+  return out;
+}
+
+async function buildSchem(pts,blockId,filename){
+  if(!pts.length)return;
+  let x0=Infinity,y0=Infinity,z0=Infinity,x1=-Infinity,y1=-Infinity,z1=-Infinity;
+  for(const[x,y,z]of pts){x0=Math.min(x0,x);y0=Math.min(y0,y);z0=Math.min(z0,z);x1=Math.max(x1,x);y1=Math.max(y1,y);z1=Math.max(z1,z);}
+  const W=x1-x0+1,H=y1-y0+1,L=z1-z0+1;
+  const filled=new Set(pts.map(([x,y,z])=>`${x-x0},${y-y0},${z-z0}`));
+  const bd=[];
+  for(let y=0;y<H;y++)for(let z=0;z<L;z++)for(let x=0;x<W;x++)varint(bd,filled.has(`${x},${y},${z}`)?1:0);
+  const nbt=new NBT();
+  nbt.beginCompound('');
+    nbt.tInt('Version',2);
+    nbt.tInt('DataVersion',3700);
+    nbt.beginCompound('Metadata');
+      nbt.tStr('Name',filename);
+      nbt.tInt('WEOffsetX',0);nbt.tInt('WEOffsetY',0);nbt.tInt('WEOffsetZ',0);
+    nbt.end();
+    nbt.tShort('Width',W);nbt.tShort('Height',H);nbt.tShort('Length',L);
+    nbt.tInt('PaletteMax',2);
+    nbt.beginCompound('Palette');
+      nbt.tInt('minecraft:air',0);nbt.tInt(blockId,1);
+    nbt.end();
+    nbt.tByteArr('BlockData',bd);
+    nbt.beginList('BlockEntities',10,0);
+  nbt.end();
+  const compressed=await gzipData(nbt.bytes());
+  const blob=new Blob([compressed],{type:'application/octet-stream'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download=filename+'.schem';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),5000);
+}
+
+function circlePoints(){
+  const{d,mode}=S.circle,g=mode==='filled'?diskFill(d):circleGrid(d),pts=[];
+  for(let z=0;z<d;z++)for(let x=0;x<d;x++)if(g[z][x])pts.push([x,0,z]);
+  return pts;
+}
+function ovalPoints(){
+  const{w,h,mode}=S.oval,g=mode==='filled'?ellipseFill(w,h):ellipseGrid(w,h),pts=[];
+  for(let z=0;z<h;z++)for(let x=0;x<w;x++)if(g[z][x])pts.push([x,0,z]);
+  return pts;
+}
+function spherePoints(){
+  const{d,mode}=S.sphere,pts=[];
+  for(let ly=1;ly<=d;ly++){
+    const g=mode==='solid'?solidLayerGrid(d,ly):shellLayerGrid(d,ly);
+    for(let z=0;z<d;z++)for(let x=0;x<d;x++)if(g[z][x])pts.push([x,ly-1,z]);
+  }
+  return pts;
+}
+function arcPoints(){
+  const{d,start,len}=S.arc,g=arcGrid(d,start,len),pts=[];
+  for(let z=0;z<d;z++)for(let x=0;x<d;x++)if(g[z][x])pts.push([x,0,z]);
+  return pts;
+}
+
+function wireExport(btnId,selId,msgId,getPts,name){
+  document.getElementById(btnId).addEventListener('click',async()=>{
+    const btn=document.getElementById(btnId),msg=document.getElementById(msgId);
+    btn.disabled=true;msg.textContent='Building…';
+    try{await buildSchem(getPts(),document.getElementById(selId).value,name);
+      msg.textContent='✓ Downloaded!';setTimeout(()=>msg.textContent='',3000);
+    }catch(e){msg.textContent='Error: '+e.message;console.error(e);}
+    btn.disabled=false;
+  });
+}
+wireExport('c-export','c-block','c-expmsg',circlePoints,'circle');
+wireExport('o-export','o-block','o-expmsg',ovalPoints,'oval');
+wireExport('sp-export','sp-block','sp-expmsg',spherePoints,'sphere');
+wireExport('a-export','a-block','a-expmsg',arcPoints,'arc');
+
+// ── Bug report form ──────────────────────────────────────────
+document.getElementById('bug-btn').onclick=()=>{
+  const last=localStorage.getItem('bug_submitted');
+  const msg=document.getElementById('bug-msg');
+  if(last){
+    const hrs=(Date.now()-parseInt(last))/(1000*60*60);
+    if(hrs<24){
+      const remaining=Math.ceil(24-hrs);
+      document.getElementById('bug-overlay').classList.add('show');
+      document.getElementById('bug-submit').disabled=true;
+      msg.style.color='#e05555';
+      msg.textContent=`You already sent a report. Please wait ${remaining}h before submitting again.`;
+      return;
+    }
+  }
+  document.getElementById('bug-submit').disabled=false;
+  msg.textContent='';
+  document.getElementById('bug-overlay').classList.add('show');
+};
+document.getElementById('bug-close').onclick=()=>document.getElementById('bug-overlay').classList.remove('show');
+document.getElementById('bug-overlay').addEventListener('click',e=>{if(e.target===document.getElementById('bug-overlay'))document.getElementById('bug-overlay').classList.remove('show');});
+
+document.getElementById('bug-form').addEventListener('submit',async e=>{
+  e.preventDefault();
+  const btn=document.getElementById('bug-submit');
+  const msg=document.getElementById('bug-msg');
+  btn.disabled=true;btn.textContent='Sending…';
+  try{
+    const res=await fetch('https://formspree.io/f/xzdwngyg',{
+      method:'POST',
+      headers:{'Accept':'application/json'},
+      body:new FormData(e.target)
+    });
+    if(res.ok){
+      localStorage.setItem('bug_submitted',Date.now().toString());
+      msg.textContent='✓ Report sent! Thanks for helping improve the tool.';
+      msg.style.color='#4caf6e';
+      setTimeout(()=>{
+        document.getElementById('bug-overlay').classList.remove('show');
+        e.target.reset();
+        msg.textContent='';
+        btn.textContent='📨 Send Report';
+      },2500);
+    }else{
+      throw new Error('Server error');
+    }
+  }catch{
+    msg.textContent='Something went wrong. Please try again.';
+    msg.style.color='#e05555';
+    btn.disabled=false;btn.textContent='📨 Send Report';
+  }
+});
+
+// ── Adblock detector ──
+(function(){
+  // Don't show if user already dismissed it
+  if(localStorage.getItem('ab_dismissed'))return;
+
+  function showPopup(){
+    document.getElementById('ab-overlay').classList.add('show');
+  }
+
+  let detected=false;
+  function flag(){if(!detected){detected=true;showPopup();}}
+
+  // Method 1: DOM bait (catches uBlock, AdBlock Plus, etc.)
+  setTimeout(()=>{
+    const bait=document.getElementById('ad-bait');
+    if(!bait||bait.offsetHeight===0||bait.offsetParent===null||
+      window.getComputedStyle(bait).display==='none'||
+      window.getComputedStyle(bait).visibility==='hidden'){
+      flag();
+    }
+  },800);
+
+  // Method 2: Fetch a known ad URL (catches Brave Shields + network-level blockers)
+  fetch('https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js',{
+    method:'HEAD',mode:'no-cors',cache:'no-store'
+  }).catch(()=>flag());
+
+  // Method 3: Check if AdSense script was blocked from loading
+  setTimeout(()=>{
+    if(typeof window.adsbygoogle==='undefined'||
+      !document.querySelector('script[src*="adsbygoogle"]')){
+      flag();
+    }
+  },2000);
+
+  document.getElementById('ab-dismiss').onclick=()=>{
+    localStorage.setItem('ab_dismissed','1');
+    document.getElementById('ab-overlay').classList.remove('show');
+  };
+  document.getElementById('ab-ignore').onclick=()=>{
+    document.getElementById('ab-overlay').classList.remove('show');
+    setTimeout(()=>{
+      if(!localStorage.getItem('ab_dismissed'))
+        document.getElementById('ab-overlay').classList.add('show');
+    },3*60*1000);
+  };
+})();
+
+// ── Pixel Art Feature ──────────────────────────────────────
+const PA_CDN='https://raw.githubusercontent.com/InventivetalentDev/minecraft-assets/1.21.4/assets/minecraft/textures/block/';
+
+const PA_BLOCKS={
+  white_concrete:'#cfd5d6',orange_concrete:'#e06100',magenta_concrete:'#a9309f',
+  light_blue_concrete:'#2389c6',yellow_concrete:'#f0af15',lime_concrete:'#5ea818',
+  pink_concrete:'#d5658e',gray_concrete:'#36393d',light_gray_concrete:'#7d7d73',
+  cyan_concrete:'#157788',purple_concrete:'#641f9c',blue_concrete:'#2c2e8f',
+  brown_concrete:'#603b1f',green_concrete:'#495b24',red_concrete:'#8e2020',
+  black_concrete:'#080a0f',
+  white_wool:'#e9ecec',orange_wool:'#f07613',magenta_wool:'#bd44b3',
+  light_blue_wool:'#3aafd9',yellow_wool:'#f8c527',lime_wool:'#70b919',
+  pink_wool:'#ed8dac',gray_wool:'#3e4447',light_gray_wool:'#8e8e86',
+  cyan_wool:'#158991',purple_wool:'#792aac',blue_wool:'#35399d',
+  brown_wool:'#724728',green_wool:'#546d1b',red_wool:'#a02722',black_wool:'#141519',
+  terracotta:'#985e43',white_terracotta:'#d1b2a1',orange_terracotta:'#a15325',
+  magenta_terracotta:'#95586c',light_blue_terracotta:'#716c89',yellow_terracotta:'#ba8523',
+  lime_terracotta:'#677534',pink_terracotta:'#a14e4e',gray_terracotta:'#392a23',
+  light_gray_terracotta:'#876a61',cyan_terracotta:'#565b5b',purple_terracotta:'#764656',
+  blue_terracotta:'#4a3b5b',brown_terracotta:'#4d3323',green_terracotta:'#4c532a',
+  red_terracotta:'#8f3d2e',black_terracotta:'#251610',
+  stone:'#7d7d7d',granite:'#956755',polished_granite:'#9a6a59',
+  diorite:'#bcbcbc',polished_diorite:'#c0c1c2',andesite:'#888888',
+  polished_andesite:'#848685',cobblestone:'#7f7f7f',mossy_cobblestone:'#6e765e',
+  stone_bricks:'#7a797a',mossy_stone_bricks:'#737969',cracked_stone_bricks:'#767576',
+  smooth_stone:'#9e9e9e',deepslate:'#505052',cobbled_deepslate:'#4d4d50',
+  polished_deepslate:'#484849',deepslate_bricks:'#464647',deepslate_tiles:'#363637',
+  tuff:'#6c6d66',tuff_bricks:'#62665f',polished_tuff:'#616863',
+  calcite:'#dfe0dc',blackstone:'#2a2328',polished_blackstone:'#353038',
+  oak_planks:'#a2824e',spruce_planks:'#725430',birch_planks:'#c0af79',
+  jungle_planks:'#a07350',acacia_planks:'#a85a32',dark_oak_planks:'#422b14',
+  cherry_planks:'#e2b2ac',bamboo_planks:'#c1ad50',mangrove_planks:'#753630',
+  oak_log:'#6d5532',spruce_log:'#3a2510',birch_log:'#d8d7d2',
+  jungle_log:'#554319',acacia_log:'#676056',dark_oak_log:'#3c2e1a',
+  cherry_log:'#36212c',bamboo_block:'#7f9039',mangrove_log:'#534229',
+  iron_block:'#dcdcdc',gold_block:'#f6d03d',diamond_block:'#62ede4',
+  emerald_block:'#2acb57',lapis_block:'#1e438c',redstone_block:'#af1805',
+  coal_block:'#100f0f',copper_block:'#c06b4f',netherite_block:'#423d3f',
+  raw_iron_block:'#a6876b',raw_gold_block:'#dda92e',raw_copper_block:'#9a694f',
+  amethyst_block:'#8561bf',prismarine:'#639c97',prismarine_bricks:'#63ab9e',
+  dark_prismarine:'#335b4b',
+  dirt:'#866043',coarse_dirt:'#77553b',sand:'#dbcfa3',red_sand:'#be6621',
+  gravel:'#837f7e',clay:'#a0a6b3',snow:'#f9fefe',ice:'#91b7fd',
+  blue_ice:'#74a7fd',packed_ice:'#8db4fa',glowstone:'#ab8354',sea_lantern:'#acc7be',
+  obsidian:'#0f0a18',crying_obsidian:'#200a3c',bedrock:'#555555',
+  end_stone:'#dbde9e',end_stone_bricks:'#dae0a2',magma:'#8e3f1f',
+  nether_bricks:'#2c151a',red_nether_bricks:'#450709',nether_wart_block:'#720202',
+  warped_wart_block:'#167779',smooth_basalt:'#48484e',
+  quartz_block_side:'#ebe5de',sandstone:'#d8cb9b',red_sandstone:'#ba631d',
+  bricks:'#966153',bookshelf:'#755e3b',mud_bricks:'#89674f',
+  honeycomb_block:'#e5941d',sponge:'#c3c04a',
+  white_stained_glass:'#f0f0f0',orange_stained_glass:'#d87f33',
+  magenta_stained_glass:'#b24cd8',light_blue_stained_glass:'#6699d8',
+  yellow_stained_glass:'#e5e533',lime_stained_glass:'#7fcc19',
+  pink_stained_glass:'#f27fa5',gray_stained_glass:'#4c4c4c',
+  light_gray_stained_glass:'#999999',cyan_stained_glass:'#4c7f99',
+  purple_stained_glass:'#7f3fb2',blue_stained_glass:'#334cb2',
+  brown_stained_glass:'#664c33',green_stained_glass:'#667f33',
+  red_stained_glass:'#993333',black_stained_glass:'#191919',
+};
+
+const PA_GROUPS=[
+  {label:'Concrete',blocks:['white_concrete','orange_concrete','magenta_concrete','light_blue_concrete','yellow_concrete','lime_concrete','pink_concrete','gray_concrete','light_gray_concrete','cyan_concrete','purple_concrete','blue_concrete','brown_concrete','green_concrete','red_concrete','black_concrete']},
+  {label:'Wool',blocks:['white_wool','orange_wool','magenta_wool','light_blue_wool','yellow_wool','lime_wool','pink_wool','gray_wool','light_gray_wool','cyan_wool','purple_wool','blue_wool','brown_wool','green_wool','red_wool','black_wool']},
+  {label:'Terracotta',blocks:['terracotta','white_terracotta','orange_terracotta','magenta_terracotta','light_blue_terracotta','yellow_terracotta','lime_terracotta','pink_terracotta','gray_terracotta','light_gray_terracotta','cyan_terracotta','purple_terracotta','blue_terracotta','brown_terracotta','green_terracotta','red_terracotta','black_terracotta']},
+  {label:'Stone',blocks:['stone','granite','polished_granite','diorite','polished_diorite','andesite','polished_andesite','cobblestone','mossy_cobblestone','stone_bricks','mossy_stone_bricks','cracked_stone_bricks','smooth_stone','deepslate','cobbled_deepslate','polished_deepslate','deepslate_bricks','deepslate_tiles','tuff','tuff_bricks','polished_tuff','calcite','blackstone','polished_blackstone']},
+  {label:'Wood',blocks:['oak_planks','spruce_planks','birch_planks','jungle_planks','acacia_planks','dark_oak_planks','cherry_planks','bamboo_planks','mangrove_planks','oak_log','spruce_log','birch_log','jungle_log','acacia_log','dark_oak_log','cherry_log','bamboo_block','mangrove_log']},
+  {label:'Ores & Gems',blocks:['iron_block','gold_block','diamond_block','emerald_block','lapis_block','redstone_block','coal_block','copper_block','netherite_block','raw_iron_block','raw_gold_block','raw_copper_block','amethyst_block','prismarine','prismarine_bricks','dark_prismarine']},
+  {label:'Nature',blocks:['dirt','coarse_dirt','sand','red_sand','gravel','clay','snow','ice','blue_ice','packed_ice','glowstone','sea_lantern']},
+  {label:'Nether & End',blocks:['obsidian','crying_obsidian','bedrock','end_stone','end_stone_bricks','magma','nether_bricks','red_nether_bricks','nether_wart_block','warped_wart_block','smooth_basalt']},
+  {label:'Other',blocks:['quartz_block_side','sandstone','red_sandstone','bricks','bookshelf','mud_bricks','honeycomb_block','sponge']},
+  {label:'Stained Glass',blocks:['white_stained_glass','orange_stained_glass','magenta_stained_glass','light_blue_stained_glass','yellow_stained_glass','lime_stained_glass','pink_stained_glass','gray_stained_glass','light_gray_stained_glass','cyan_stained_glass','purple_stained_glass','blue_stained_glass','brown_stained_glass','green_stained_glass','red_stained_glass','black_stained_glass']},
+];
+
+S.pixelart={w:32,h:32,cells:new Array(32*32).fill(null),tool:'brush',brush:'white_concrete',showGrid:true};
+
+const PA_TEX={};
+function loadPATex(id){
+  if(id in PA_TEX)return PA_TEX[id];
+  const img=new Image();img.crossOrigin='anonymous';
+  PA_TEX[id]=img;
+  img.onload=()=>{renderPA();updatePaletteSwatches(id,img);};
+  img.onerror=()=>{PA_TEX[id]=null;};
+  img.src=PA_CDN+id+'.png';
+  return img;
+}
+Object.keys(PA_BLOCKS).forEach(id=>loadPATex(id));
+
+function paCS(){const{w,h}=S.pixelart;return Math.max(4,Math.min(32,Math.floor(560/Math.max(w,h))));}
+function paGAP(){return S.pixelart.showGrid?1:0;}
+
+function renderPA(){
+  const{w,h,cells,showGrid}=S.pixelart;
+  const cs=paCS(),gap=paGAP();
+  const W=w*(cs+gap)-gap,H=h*(cs+gap)-gap;
+  const canvas=document.getElementById('pa-canvas');
+  canvas.width=W;canvas.height=H;
+  canvas.style.width=W+'px';canvas.style.height=H+'px';
+  const ctx=canvas.getContext('2d');
+  ctx.fillStyle=showGrid?'#2a2a2a':'#1e1e1e';
+  ctx.fillRect(0,0,W,H);
+  for(let r=0;r<h;r++){
+    for(let c=0;c<w;c++){
+      const id=cells[r*w+c];
+      const px=c*(cs+gap),py=r*(cs+gap);
+      if(!id){ctx.fillStyle='#1e1e1e';ctx.fillRect(px,py,cs,cs);}
+      else{
+        const tex=PA_TEX[id];
+        if(tex&&tex.complete&&tex.naturalWidth>0){ctx.drawImage(tex,px,py,cs,cs);}
+        else{ctx.fillStyle=PA_BLOCKS[id]||'#888';ctx.fillRect(px,py,cs,cs);}
+      }
+    }
+  }
+  const filled=cells.filter(Boolean).length;
+  document.getElementById('pa-stats').innerHTML=
+    `<div class="stat">Placed: <b>${filled}</b></div><div class="stat">Empty: <b>${w*h-filled}</b></div><div class="stat">Size: <b>${w}×${h}</b></div>`;
+}
+
+function renderPAPalette(){
+  const pal=document.getElementById('pa-palette');
+  pal.innerHTML='';
+  for(const{label,blocks}of PA_GROUPS){
+    const g=document.createElement('div');g.className='pa-group';g.textContent=label;pal.appendChild(g);
+    for(const id of blocks){
+      if(!PA_BLOCKS[id])continue;
+      const el=document.createElement('canvas');
+      el.width=el.height=16;
+      el.className='pa-block'+(id===S.pixelart.brush?' sel':'');
+      el.title=id.replace(/_/g,' ');el.dataset.id=id;
+      const ectx=el.getContext('2d');
+      const tex=PA_TEX[id];
+      if(tex&&tex.complete&&tex.naturalWidth>0){ectx.drawImage(tex,0,0,16,16);}
+      else{ectx.fillStyle=PA_BLOCKS[id];ectx.fillRect(0,0,16,16);}
+      el.addEventListener('click',()=>{
+        S.pixelart.brush=id;
+        document.getElementById('pa-sel-name').textContent=id.replace(/_/g,' ');
+        document.querySelectorAll('.pa-block').forEach(e=>e.classList.remove('sel'));
+        el.classList.add('sel');
+        if(S.pixelart.tool==='erase')setPATool('brush');
+      });
+      pal.appendChild(el);
+    }
+  }
+}
+
+function updatePaletteSwatches(id,img){
+  document.querySelectorAll(`.pa-block[data-id="${id}"]`).forEach(el=>{
+    const ectx=el.getContext('2d');
+    if(ectx){ectx.clearRect(0,0,16,16);ectx.drawImage(img,0,0,16,16);}
+  });
+}
+
+function getPACell(e,touch){
+  const canvas=document.getElementById('pa-canvas');
+  const rect=canvas.getBoundingClientRect();
+  const cs=paCS(),gap=paGAP();
+  const scaleX=canvas.width/rect.width,scaleY=canvas.height/rect.height;
+  const cx=touch?e.touches[0].clientX:e.clientX;
+  const cy=touch?e.touches[0].clientY:e.clientY;
+  return{col:Math.floor((cx-rect.left)*scaleX/(cs+gap)),row:Math.floor((cy-rect.top)*scaleY/(cs+gap))};
+}
+
+function applyPATool(row,col){
+  const{w,h,tool,brush,cells}=S.pixelart;
+  if(col<0||col>=w||row<0||row>=h)return false;
+  const idx=row*w+col;
+  if(tool==='erase'){cells[idx]=null;}
+  else if(tool==='brush'){if(cells[idx]===brush)return false;cells[idx]=brush;}
+  else if(tool==='fill'){
+    const target=cells[idx];if(target===brush)return false;
+    const q=[[row,col]],seen=new Set();
+    while(q.length){
+      const[r,c]=q.shift();
+      if(r<0||r>=h||c<0||c>=w)continue;
+      const i=r*w+c;if(seen.has(i)||cells[i]!==target)continue;
+      seen.add(i);cells[i]=brush;
+      q.push([r-1,c],[r+1,c],[r,c-1],[r,c+1]);
+    }
+  }
+  return true;
+}
+
+let paDrawing=false;
+const paCanvas=document.getElementById('pa-canvas');
+paCanvas.addEventListener('mousedown',e=>{
+  paDrawing=true;const p=getPACell(e,false);
+  if(applyPATool(p.row,p.col))renderPA();
+  if(S.pixelart.tool==='fill')paDrawing=false;
+});
+paCanvas.addEventListener('mousemove',e=>{
+  if(!paDrawing||S.pixelart.tool==='fill')return;
+  const p=getPACell(e,false);if(applyPATool(p.row,p.col))renderPA();
+});
+window.addEventListener('mouseup',()=>{paDrawing=false;});
+paCanvas.addEventListener('touchstart',e=>{
+  e.preventDefault();paDrawing=true;const p=getPACell(e,true);
+  if(applyPATool(p.row,p.col))renderPA();
+  if(S.pixelart.tool==='fill')paDrawing=false;
+},{passive:false});
+paCanvas.addEventListener('touchmove',e=>{
+  e.preventDefault();if(!paDrawing||S.pixelart.tool==='fill')return;
+  const p=getPACell(e,true);if(applyPATool(p.row,p.col))renderPA();
+},{passive:false});
+window.addEventListener('touchend',()=>{paDrawing=false;});
+
+function setPATool(t){
+  S.pixelart.tool=t;
+  ['brush','fill','erase'].forEach(n=>document.getElementById('pa-'+n).classList.toggle('on',n===t));
+}
+document.getElementById('pa-brush').onclick=()=>setPATool('brush');
+document.getElementById('pa-fill').onclick=()=>setPATool('fill');
+document.getElementById('pa-erase').onclick=()=>setPATool('erase');
+document.getElementById('pa-grid-on').onclick=()=>{S.pixelart.showGrid=true;document.getElementById('pa-grid-on').classList.add('on');document.getElementById('pa-grid-off').classList.remove('on');renderPA();};
+document.getElementById('pa-grid-off').onclick=()=>{S.pixelart.showGrid=false;document.getElementById('pa-grid-off').classList.add('on');document.getElementById('pa-grid-on').classList.remove('on');renderPA();};
+
+function paResize(nw,nh){
+  const{w:ow,h:oh,cells:oc}=S.pixelart;
+  const nc=new Array(nw*nh).fill(null);
+  for(let r=0;r<Math.min(oh,nh);r++)for(let c=0;c<Math.min(ow,nw);c++)nc[r*nw+c]=oc[r*ow+c];
+  S.pixelart.w=nw;S.pixelart.h=nh;S.pixelart.cells=nc;
+  document.getElementById('pa-w').value=nw;document.getElementById('pa-h').value=nh;
+  renderPA();
+}
+document.getElementById('pa-wdec').onclick=()=>{if(S.pixelart.w>1)paResize(S.pixelart.w-1,S.pixelart.h);};
+document.getElementById('pa-winc').onclick=()=>{if(S.pixelart.w<256)paResize(S.pixelart.w+1,S.pixelart.h);};
+document.getElementById('pa-hdec').onclick=()=>{if(S.pixelart.h>1)paResize(S.pixelart.w,S.pixelart.h-1);};
+document.getElementById('pa-hinc').onclick=()=>{if(S.pixelart.h<256)paResize(S.pixelart.w,S.pixelart.h+1);};
+document.getElementById('pa-w').addEventListener('change',e=>{paResize(Math.max(1,Math.min(256,Math.round(+e.target.value))),S.pixelart.h);});
+document.getElementById('pa-h').addEventListener('change',e=>{paResize(S.pixelart.w,Math.max(1,Math.min(256,Math.round(+e.target.value))));});
+document.getElementById('pa-clear').onclick=()=>{S.pixelart.cells=new Array(S.pixelart.w*S.pixelart.h).fill(null);renderPA();};
+
+function hexToRgbArr(hex){return[parseInt(hex.slice(1,3),16),parseInt(hex.slice(3,5),16),parseInt(hex.slice(5,7),16)];}
+const PA_BLOCK_ENTRIES=Object.entries(PA_BLOCKS).map(([id,hex])=>[id,...hexToRgbArr(hex)]);
+function nearestPABlock(r,g,b){
+  let best='white_concrete',bestD=Infinity;
+  for(const[id,br,bg,bb]of PA_BLOCK_ENTRIES){
+    const d=(r-br)**2+(g-bg)**2+(b-bb)**2;
+    if(d<bestD){bestD=d;best=id;}
+  }
+  return best;
+}
+
+document.getElementById('pa-upload').addEventListener('change',e=>{
+  const file=e.target.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    const img=new Image();
+    img.onload=()=>{
+      const{w,h}=S.pixelart;
+      const oc=document.createElement('canvas');oc.width=w;oc.height=h;
+      const ox=oc.getContext('2d');ox.drawImage(img,0,0,w,h);
+      const data=ox.getImageData(0,0,w,h).data;
+      S.pixelart.cells=Array.from({length:w*h},(_,i)=>data[i*4+3]<128?null:nearestPABlock(data[i*4],data[i*4+1],data[i*4+2]));
+      renderPA();
+    };
+    img.src=ev.target.result;
+  };
+  reader.readAsDataURL(file);e.target.value='';
+});
+
+async function buildMultiSchem(blockMap,W,H,L,filename){
+  const ids=[...new Set(blockMap.values())];
+  const palette={'minecraft:air':0};
+  ids.forEach((id,i)=>{palette[id]=i+1;});
+  const bd=[];
+  for(let y=0;y<H;y++)for(let z=0;z<L;z++)for(let x=0;x<W;x++){
+    varint(bd,blockMap.has(`${x},${y},${z}`)?palette[blockMap.get(`${x},${y},${z}`)]:0);
+  }
+  const nbt=new NBT();
+  nbt.beginCompound('');
+    nbt.tInt('Version',2);nbt.tInt('DataVersion',3700);
+    nbt.beginCompound('Metadata');nbt.tStr('Name',filename);nbt.tInt('WEOffsetX',0);nbt.tInt('WEOffsetY',0);nbt.tInt('WEOffsetZ',0);nbt.end();
+    nbt.tShort('Width',W);nbt.tShort('Height',H);nbt.tShort('Length',L);
+    nbt.tInt('PaletteMax',ids.length+1);
+    nbt.beginCompound('Palette');Object.entries(palette).forEach(([id,idx])=>nbt.tInt(id,idx));nbt.end();
+    nbt.tByteArr('BlockData',bd);
+    nbt.beginList('BlockEntities',10,0);
+  nbt.end();
+  const compressed=await gzipData(nbt.bytes());
+  const blob=new Blob([compressed],{type:'application/octet-stream'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=filename+'.schem';a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href),5000);
+}
+
+document.getElementById('pa-export').addEventListener('click',async()=>{
+  const btn=document.getElementById('pa-export'),msg=document.getElementById('pa-expmsg');
+  btn.disabled=true;msg.textContent='Building…';
+  try{
+    const{w,h,cells}=S.pixelart;
+    const blockMap=new Map();
+    for(let r=0;r<h;r++)for(let c=0;c<w;c++){const id=cells[r*w+c];if(id)blockMap.set(`${c},0,${r}`,'minecraft:'+id);}
+    if(!blockMap.size)throw new Error('Canvas is empty!');
+    await buildMultiSchem(blockMap,w,1,h,'pixel_art');
+    msg.textContent='✓ Downloaded!';setTimeout(()=>msg.textContent='',3000);
+  }catch(ex){msg.textContent='Error: '+ex.message;}
+  btn.disabled=false;
+});
+
+renderPA();
+renderPAPalette();
+// ── Zoom View system ──────────────────────────────────────
+const ZV_W=320,ZV_H=320;
+
+function renderZV(canvasId,grid,rows,cols,getCk,selId,zv){
+  const canvas=document.getElementById(canvasId);
+  if(!canvas||!grid)return;
+  canvas.width=ZV_W;canvas.height=ZV_H;
+  canvas.style.width=ZV_W+'px';canvas.style.height=ZV_H+'px';
+  const ctx=canvas.getContext('2d');
+  const cs=zv.cs,step=cs+1;
+  const cfg=selId?getBlockConfig(selId):{isDefault:true,rawId:'',color:null};
+  const{isDefault,rawId,color}=cfg;
+  ctx.fillStyle='#2a2a2a';ctx.fillRect(0,0,ZV_W,ZV_H);
+  const sc=Math.max(0,Math.floor(zv.ox)),sr=Math.max(0,Math.floor(zv.oy));
+  const ec=Math.min(cols,sc+Math.ceil(ZV_W/step)+2);
+  const er=Math.min(rows,sr+Math.ceil(ZV_H/step)+2);
+  const ck=getCk();
+  for(let r=sr;r<er;r++){
+    for(let c=sc;c<ec;c++){
+      const v=grid[r][c];
+      const px=Math.round((c-zv.ox)*step),py=Math.round((r-zv.oy)*step);
+      const key=`${r},${c}`;
+      if(ck.has(key)){
+        ctx.fillStyle='#585858';ctx.fillRect(px,py,cs,cs);
+        ctx.fillStyle='rgba(255,255,255,0.5)';
+        ctx.font=`bold ${Math.max(10,Math.floor(cs*.6))}px sans-serif`;
+        ctx.textAlign='center';ctx.textBaseline='middle';
+        ctx.fillText('✓',px+cs/2,py+cs/2);
+      } else if(v>0){
+        if(isDefault){
+          ctx.fillStyle=v===2?'#236b12':'#4ecf22';ctx.fillRect(px,py,cs,cs);
+        } else {
+          ctx.fillStyle=color||'#888';ctx.fillRect(px,py,cs,cs);
+          const tex=PA_TEX[rawId];
+          if(tex&&tex.complete&&tex.naturalWidth>0){
+            if(GLASS_IDS.has(rawId))ctx.globalAlpha=0.8;
+            ctx.drawImage(tex,px,py,cs,cs);ctx.globalAlpha=1;
+          }
+        }
+        ctx.fillStyle='rgba(0,0,0,0.3)';ctx.fillRect(px+cs-2,py,2,cs);ctx.fillRect(px,py+cs-2,cs,2);
+        ctx.fillStyle='rgba(255,255,255,0.15)';ctx.fillRect(px,py,cs,2);ctx.fillRect(px,py,2,cs);
+      } else {
+        ctx.fillStyle='#1e1e1e';ctx.fillRect(px,py,cs,cs);
+      }
+    }
+  }
+}
+
+function setupZV(canvasId,zv,getGrid,getRows,getCols,getCk,selElId,rerender){
+  const canvas=document.getElementById(canvasId);
+  if(!canvas)return;
+  let drag=false,moved=false,sx=0,sy=0,sox=0,soy=0;
+  function startD(cx,cy){drag=true;moved=false;sx=cx;sy=cy;sox=zv.ox;soy=zv.oy;canvas.style.cursor='grabbing';}
+  function moveD(cx,cy){
+    if(!drag)return;
+    const dx=cx-sx,dy=cy-sy;
+    if(Math.abs(dx)>3||Math.abs(dy)>3)moved=true;
+    const step=zv.cs+1,rect=canvas.getBoundingClientRect();
+    const scX=ZV_W/rect.width,scY=ZV_H/rect.height;
+    zv.ox=Math.max(0,Math.min(getCols()-1,sox-dx*scX/step));
+    zv.oy=Math.max(0,Math.min(getRows()-1,soy-dy*scY/step));
+    renderZV(canvasId,getGrid(),getRows(),getCols(),getCk,selElId,zv);
+  }
+  function endD(cx,cy,isTouch){
+    if(drag&&!moved){
+      const rect=canvas.getBoundingClientRect();
+      const scX=ZV_W/rect.width,scY=ZV_H/rect.height;
+      const step=zv.cs+1;
+      const col=Math.floor((cx-rect.left)*scX/step+zv.ox);
+      const row=Math.floor((cy-rect.top)*scY/step+zv.oy);
+      const grid=getGrid();
+      if(row>=0&&row<getRows()&&col>=0&&col<getCols()&&grid&&grid[row][col]){
+        const key=`${row},${col}`;const ck=getCk();
+        if(ck.has(key))ck.delete(key);else ck.add(key);
+        rerender();
+      }
+    }
+    drag=false;canvas.style.cursor='grab';
+  }
+  canvas.addEventListener('mousedown',e=>{e.preventDefault();startD(e.clientX,e.clientY);});
+  window.addEventListener('mousemove',e=>{moveD(e.clientX,e.clientY);});
+  window.addEventListener('mouseup',e=>{endD(e.clientX,e.clientY,false);});
+  canvas.addEventListener('touchstart',e=>{e.preventDefault();startD(e.touches[0].clientX,e.touches[0].clientY);},{passive:false});
+  canvas.addEventListener('touchmove',e=>{e.preventDefault();moveD(e.touches[0].clientX,e.touches[0].clientY);},{passive:false});
+  canvas.addEventListener('touchend',e=>{e.preventDefault();const t=e.changedTouches[0];endD(t.clientX,t.clientY,true);},{passive:false});
+}
+
+function zvCenter(zv,d){
+  zv.ox=Math.max(0,d/2-(ZV_W/2/(zv.cs+1)));
+  zv.oy=Math.max(0,d/2-(ZV_H/2/(zv.cs+1)));
+}
+
+// ── Zoom view wiring ──
+function zvBtns(minusId,plusId,pctId,getZV,getGrid,getRows,getCols,getCk,selElId){
+  document.getElementById(minusId).onclick=()=>{
+    const zv=getZV();zv.cs=Math.max(8,zv.cs-4);
+    document.getElementById(pctId).textContent=zv.cs+'px';
+    renderZV(minusId.replace('-zm','-zv'),getGrid(),getRows(),getCols(),getCk,selElId,zv);
+  };
+  document.getElementById(plusId).onclick=()=>{
+    const zv=getZV();zv.cs=Math.min(64,zv.cs+4);
+    document.getElementById(pctId).textContent=zv.cs+'px';
+    renderZV(plusId.replace('-zp','-zv'),getGrid(),getRows(),getCols(),getCk,selElId,zv);
+  };
+}
+zvBtns('c-zm','c-zp','c-zpct',()=>S.circle.zv,()=>S.circle.grid,()=>S.circle.d,()=>S.circle.d,()=>S.circle.ck,'c-block');
+zvBtns('o-zm','o-zp','o-zpct',()=>S.oval.zv,()=>S.oval.grid,()=>S.oval.h,()=>S.oval.w,()=>S.oval.ck,'o-block');
+zvBtns('a-zm','a-zp','a-zpct',()=>S.arc.zv,()=>S.arc.grid,()=>S.arc.d,()=>S.arc.d,()=>S.arc.ck,'a-block');
+
+setupZV('c-zv',S.circle.zv,()=>S.circle.grid,()=>S.circle.d,()=>S.circle.d,()=>S.circle.ck,'c-block',rCircle);
+setupZV('o-zv',S.oval.zv,()=>S.oval.grid,()=>S.oval.h,()=>S.oval.w,()=>S.oval.ck,'o-block',rOval);
+setupZV('a-zv',S.arc.zv,()=>S.arc.grid,()=>S.arc.d,()=>S.arc.d,()=>S.arc.ck,'a-block',rArc);
+
+// ── Machines Feature ────────────────────────────────────────
+
+// Extra block colors for machines (not in PA_BLOCKS)
+const MACHINE_EXTRA_BLOCKS = {
+  water:'#3a7fc1', lava:'#c45c00', cobblestone:'#7f7f7f', air:'#1e1e1e',
+  slime_block:'#6fc05b', dead_brain_coral_fan:'#847d79',
+  detector_rail:'#7b685a', soul_sand:'#513e32',
+  tnt:'#c41111', observer:'#6e6e6e',
+  bed_red:'#cc3333', glass_pane:'#aaddff',
+};
+
+function getMachineBlockColor(block){
+  if(PA_BLOCKS[block])return PA_BLOCKS[block];
+  return MACHINE_EXTRA_BLOCKS[block]||'#888888';
+}
+
+function getMachineBlockTex(block){
+  if(PA_TEX[block]&&PA_TEX[block].complete&&PA_TEX[block].naturalWidth>0)return PA_TEX[block];
+  if(PA_BLOCKS[block]&&!PA_TEX[block])loadPATex(block);
+  // For machine-only blocks try CDN
+  if(MACHINE_EXTRA_BLOCKS[block]&&!PA_TEX[block]){
+    const img=new Image();img.crossOrigin='anonymous';
+    PA_TEX[block]=img;
+    img.onload=()=>{renderMachineIfActive();};
+    img.onerror=()=>{PA_TEX[block]=null;};
+    img.src=PA_CDN+block+'.png';
+  }
+  return null;
+}
+
+// Machine data
+const MACHINES_DATA={
+  cobblestone_generator:{
+    id:'cobblestone_generator',name:'Cobblestone Generator',
+    desc:'Generates infinite cobblestone using lava and water. Essential for Skyblock and early survival.',
+    editions:['java','bedrock'],versions:'1.16 – 1.21+',
+    size:{x:7,y:3,z:3},
+    layers:[
+      {y:0,label:'Layer 1 — Foundation',note:'Solid stone base. The trench sits on top of this.',
+       blocks:Array.from({length:7},(_,x)=>Array.from({length:3},(_,z)=>({x,z,block:'stone'}))).flat()},
+      {y:1,label:'Layer 2 — Trench',note:'Place water source on the left. Lava source on the right. Cobblestone forms in the center — mine it to restart the cycle.',
+       blocks:[
+        ...[0,1,2,3,4,5,6].flatMap(x=>[{x,z:0,block:'stone'},{x,z:2,block:'stone'}]),
+        {x:0,z:1,block:'stone'},{x:6,z:1,block:'stone'},
+        {x:1,z:1,block:'water'},{x:2,z:1,block:'water'},
+        {x:3,z:1,block:'cobblestone'},
+        {x:4,z:1,block:'lava'},{x:5,z:1,block:'lava'},
+       ]},
+      {y:2,label:'Layer 3 — Open Top',note:'Leave open. Stand here to mine cobblestone as it generates.',
+       blocks:[
+        ...[0,1,2,3,4,5,6].flatMap(x=>[{x,z:0,block:'stone'},{x,z:2,block:'stone'}]),
+        {x:0,z:1,block:'stone'},{x:6,z:1,block:'stone'},
+       ]},
+    ]
+  },
+  mob_farm:{
+    id:'mob_farm',name:'Mob Farm',
+    desc:'Dark room spawner with water flushing and a drop kill chamber. Produces XP and loot passively.',
+    editions:['java','bedrock'],versions:'1.16 – 1.21+',
+    size:{x:10,y:6,z:10},
+    layers:[
+      {y:0,label:'Layer 1 — Collection Floor',note:'Place hoppers feeding into chests underneath to collect all drops.',
+       blocks:Array.from({length:10},(_,x)=>Array.from({length:10},(_,z)=>({x,z,block:'stone'}))).flat()},
+      {y:1,label:'Layer 2 — Kill Chamber',note:'Mobs land here from the drop above. Lava or a sword finishes them off.',
+       blocks:[
+        ...[0,1,2,3,4,5,6,7,8,9].flatMap(x=>[{x,z:0,block:'stone'},{x,z:9,block:'stone'}]),
+        ...[0,1,2,3,4,5,6,7,8,9].flatMap(z=>[{x:0,z,block:'stone'},{x:9,z,block:'stone'}]),
+        {x:4,z:4,block:'lava'},{x:5,z:4,block:'lava'},{x:4,z:5,block:'lava'},{x:5,z:5,block:'lava'},
+       ]},
+      {y:2,label:'Layer 3 — Drop Shaft',note:'22-block fall reduces mob health to 1 HP. Walls only, center is open for falling.',
+       blocks:[
+        ...[0,1,2,3,4,5,6,7,8,9].flatMap(x=>[{x,z:0,block:'stone'},{x,z:9,block:'stone'}]),
+        ...[0,1,2,3,4,5,6,7,8,9].flatMap(z=>[{x:0,z,block:'stone'},{x:9,z,block:'stone'}]),
+       ]},
+      {y:3,label:'Layer 4 — Water Channels',note:'Water flows inward from all 4 sides, sweeping spawned mobs to the center drop hole.',
+       blocks:[
+        ...[0,1,2,3,4,5,6,7,8,9].flatMap(x=>[{x,z:0,block:'stone'},{x,z:9,block:'stone'}]),
+        ...[0,1,2,3,4,5,6,7,8,9].flatMap(z=>[{x:0,z,block:'stone'},{x:9,z,block:'stone'}]),
+        ...[1,2,3,4,5,6,7,8].map(x=>({x,z:1,block:'water'})),
+        ...[1,2,3,4,5,6,7,8].map(x=>({x,z:8,block:'water'})),
+        ...[2,3,4,5,6,7].map(z=>({x:1,z,block:'water'})),
+        ...[2,3,4,5,6,7].map(z=>({x:8,z,block:'water'})),
+       ]},
+      {y:4,label:'Layer 5 — Dark Spawn Room',note:'Must be at light level 0. Mobs spawn on the stone floor and get swept by water.',
+       blocks:[
+        ...Array.from({length:10},(_,x)=>Array.from({length:10},(_,z)=>({x,z,block:'stone'}))).flat(),
+       ]},
+      {y:5,label:'Layer 6 — Roof',note:'Seal completely to maintain darkness. No light must enter from above.',
+       blocks:Array.from({length:10},(_,x)=>Array.from({length:10},(_,z)=>({x,z,block:'stone'}))).flat()},
+    ]
+  },
+  iron_farm:{
+    id:'iron_farm',name:'Iron Farm',
+    desc:'Villagers scared by a zombie trigger iron golem spawning. Produces 300+ iron ingots per hour.',
+    editions:['java','bedrock'],versions:'1.16 – 1.21+',
+    size:{x:9,y:8,z:9},
+    layers:[
+      {y:0,label:'Layer 1 — Collection',note:'Hoppers collect iron ingots and poppies from killed golems into double chests.',
+       blocks:Array.from({length:9},(_,x)=>Array.from({length:9},(_,z)=>({x,z,block:'stone'}))).flat()},
+      {y:1,label:'Layer 2 — Kill Zone',note:'Lava on signs kills golems as water pushes them to the center. Signs stop water from flowing into the drop.',
+       blocks:[
+        ...[0,1,2,3,4,5,6,7,8].flatMap(x=>[{x,z:0,block:'stone'},{x,z:8,block:'stone'}]),
+        ...[0,1,2,3,4,5,6,7,8].flatMap(z=>[{x:0,z,block:'stone'},{x:8,z,block:'stone'}]),
+        {x:3,z:4,block:'lava'},{x:5,z:4,block:'lava'},{x:4,z:3,block:'lava'},{x:4,z:5,block:'lava'},
+       ]},
+      {y:2,label:'Layer 3 — Golem Spawn Platform',note:'16×16 area (or as large as possible). Water at corners funnels golems to center hole.',
+       blocks:[
+        ...Array.from({length:9},(_,x)=>Array.from({length:9},(_,z)=>({x,z,block:x===4&&z===4?'air':'stone'}))).flat().filter(b=>b.block!=='air'),
+        {x:0,z:0,block:'water'},{x:8,z:0,block:'water'},{x:0,z:8,block:'water'},{x:8,z:8,block:'water'},
+       ]},
+      {y:3,label:'Layer 4 — Platform Walls',note:'Two-block walls keep golems on the platform until flushed to center.',
+       blocks:[
+        ...[0,1,2,3,4,5,6,7,8].flatMap(x=>[{x,z:0,block:'stone'},{x,z:8,block:'stone'}]),
+        ...[0,1,2,3,4,5,6,7,8].flatMap(z=>[{x:0,z,block:'stone'},{x:8,z,block:'stone'}]),
+       ]},
+      {y:4,label:'Layer 5 — Beds',note:'Three beds forming a valid village. Place beds here so villagers can sleep and gossip.',
+       blocks:[
+        ...[0,1,2,3,4,5,6,7,8].flatMap(x=>[{x,z:0,block:'stone'},{x,z:8,block:'stone'}]),
+        ...[0,1,2,3,4,5,6,7,8].flatMap(z=>[{x:0,z,block:'stone'},{x:8,z,block:'stone'}]),
+        {x:3,z:4,block:'red_wool'},{x:4,z:4,block:'red_wool'},{x:5,z:4,block:'red_wool'},
+       ]},
+      {y:5,label:'Layer 6 — Pod Floor',note:'Solid floor separating beds from the villager pod above.',
+       blocks:Array.from({length:9},(_,x)=>Array.from({length:9},(_,z)=>({x,z,block:'stone'}))).flat()},
+      {y:6,label:'Layer 7 — Villager Pod',note:'3 villagers on one side, 1 zombie separated by glass. Zombie line-of-sight scares villagers to trigger golem spawning faster.',
+       blocks:[
+        ...[0,1,2,3,4,5,6,7,8].flatMap(x=>[{x,z:0,block:'stone'},{x,z:8,block:'stone'}]),
+        ...[0,1,2,3,4,5,6,7,8].flatMap(z=>[{x:0,z,block:'stone'},{x:8,z,block:'stone'}]),
+        {x:4,z:3,block:'white_stained_glass'},{x:4,z:4,block:'white_stained_glass'},{x:4,z:5,block:'white_stained_glass'},
+       ]},
+      {y:7,label:'Layer 8 — Pod Roof',note:'Seal the top. Make sure each villager has a linked workstation inside the pod.',
+       blocks:Array.from({length:9},(_,x)=>Array.from({length:9},(_,z)=>({x,z,block:'stone'}))).flat()},
+    ]
+  },
+  tnt_duplicator:{
+    id:'tnt_duplicator',name:'TNT Duplicator',
+    desc:'Exploits piston block update timing to duplicate TNT infinitely. Java Edition only — patched in Bedrock.',
+    editions:['java'],versions:'1.16 – 1.21+',
+    size:{x:5,y:4,z:3},
+    layers:[
+      {y:0,label:'Layer 1 — Anchor',note:'Place one solid block as the anchor for the sticky piston.',
+       blocks:[{x:0,z:1,block:'stone'}]},
+      {y:1,label:'Layer 2 — Piston + Slime Base',note:'Sticky piston attached to the anchor, facing right. Two slime blocks in an L-shape on the piston face.',
+       blocks:[
+        {x:0,z:1,block:'stone'},{x:1,z:1,block:'slime_block'},{x:2,z:1,block:'slime_block'},
+        {x:3,z:1,block:'stone'},
+       ]},
+      {y:2,label:'Layer 3 — TNT + Coral Fan',note:'TNT on the lower slime block. Dead coral fan to the side of TNT — this is the BUD (Block Update Detector) that primes it.',
+       blocks:[
+        {x:1,z:1,block:'tnt'},{x:2,z:1,block:'slime_block'},
+        {x:1,z:0,block:'dead_brain_coral_fan'},
+        {x:3,z:1,block:'stone'},{x:4,z:1,block:'stone'},
+       ]},
+      {y:3,label:'Layer 4 — Observer + Rail + Minecart',note:'Observer facing the slime structure. Detector rail on the upper slime — place minecart on the rail to complete the circuit.',
+       blocks:[
+        {x:0,z:1,block:'observer'},{x:2,z:1,block:'detector_rail'},
+       ]},
+    ]
+  },
+  gold_farm:{
+    id:'gold_farm',name:'Nether Gold Farm',
+    desc:'Builds in the Nether at Y≥32. Zombie piglins spawn, get aggroed, and are funneled into a kill zone.',
+    editions:['java','bedrock'],versions:'1.16 – 1.21+',
+    size:{x:10,y:6,z:10},
+    layers:[
+      {y:0,label:'Layer 1 — Collection',note:'Hoppers and chests below this layer collect gold nuggets, rotten flesh, and gold swords.',
+       blocks:Array.from({length:10},(_,x)=>Array.from({length:10},(_,z)=>({x,z,block:'nether_bricks'}))).flat()},
+      {y:1,label:'Layer 2 — Kill Zone',note:'Lava on signs kills piglins as they are funneled in. Signs prevent lava from flowing onto the collection floor.',
+       blocks:[
+        ...[0,1,2,3,4,5,6,7,8,9].flatMap(x=>[{x,z:0,block:'nether_bricks'},{x,z:9,block:'nether_bricks'}]),
+        ...[0,1,2,3,4,5,6,7,8,9].flatMap(z=>[{x:0,z,block:'nether_bricks'},{x:9,z,block:'nether_bricks'}]),
+        {x:4,z:4,block:'lava'},{x:5,z:4,block:'lava'},{x:4,z:5,block:'lava'},{x:5,z:5,block:'lava'},
+       ]},
+      {y:2,label:'Layer 3 — Transport',note:'Soul sand bubble columns push piglins upward (Java). In Bedrock use a different funnel method. Water does NOT work in the Nether.',
+       blocks:[
+        ...[0,1,2,3,4,5,6,7,8,9].flatMap(x=>[{x,z:0,block:'nether_bricks'},{x,z:9,block:'nether_bricks'}]),
+        ...[0,1,2,3,4,5,6,7,8,9].flatMap(z=>[{x:0,z,block:'nether_bricks'},{x:9,z,block:'nether_bricks'}]),
+        ...Array.from({length:8},(_,x)=>Array.from({length:8},(_,z)=>({x:x+1,z:z+1,block:'soul_sand'}))).flat(),
+       ]},
+      {y:3,label:'Layer 4 — Spawn Floor',note:'Nether brick platform where piglins spawn. Must have no blocks within 2 blocks of top and bottom.',
+       blocks:Array.from({length:10},(_,x)=>Array.from({length:10},(_,z)=>({x,z,block:'nether_bricks'}))).flat()},
+      {y:4,label:'Layer 5 — Spawn Walls',note:'Two-block walls contain piglins on the platform before they aggro and walk into the funnel.',
+       blocks:[
+        ...[0,1,2,3,4,5,6,7,8,9].flatMap(x=>[{x,z:0,block:'nether_bricks'},{x,z:9,block:'nether_bricks'}]),
+        ...[0,1,2,3,4,5,6,7,8,9].flatMap(z=>[{x:0,z,block:'nether_bricks'},{x:9,z,block:'nether_bricks'}]),
+       ]},
+      {y:5,label:'Layer 6 — Glass Observation',note:'Stand behind this glass to aggro piglins safely. Piglins see you through the glass and target you, walking toward the kill zone.',
+       blocks:[
+        ...[0,1,2,3,4,5,6,7,8,9].flatMap(x=>[{x,z:0,block:'nether_bricks'},{x,z:9,block:'nether_bricks'}]),
+        ...[0,1,2,3,4,5,6,7,8,9].flatMap(z=>[{x:0,z,block:'nether_bricks'},{x:9,z,block:'nether_bricks'}]),
+        ...Array.from({length:8},(_,x)=>Array.from({length:8},(_,z)=>({x:x+1,z:z+1,block:'white_stained_glass'}))).flat(),
+       ]},
+    ]
+  }
+};
+
+const MACHINE_LIST_JAVA=['cobblestone_generator','mob_farm','iron_farm','tnt_duplicator','gold_farm'];
+const MACHINE_LIST_BEDROCK=['cobblestone_generator','mob_farm','iron_farm','gold_farm'];
+
+// State
+let machineState={edition:null,machineId:null,layer:0};
+
+function showMachinesPage(){
+  document.getElementById('machines-edition-page').style.display='flex';
+  document.getElementById('machines-list-page').style.display='none';
+  document.getElementById('machines-detail-page').style.display='none';
+}
+function showMachinesList(edition){
+  machineState.edition=edition;
+  const page=document.getElementById('machines-list-page');
+  const grid=document.getElementById('machines-grid');
+  const list=edition==='java'?MACHINE_LIST_JAVA:MACHINE_LIST_BEDROCK;
+  grid.innerHTML='';
+  list.forEach(id=>{
+    const m=MACHINES_DATA[id];
+    const card=document.createElement('div');
+    card.className='machine-card';
+    const canvas=document.createElement('canvas');
+    canvas.width=180;canvas.height=140;
+    canvas.style.cssText='width:180px;height:140px;image-rendering:pixelated;display:block;';
+    card.appendChild(canvas);
+    const label=document.createElement('div');
+    label.className='machine-card-label';
+    label.textContent=m.name;
+    card.appendChild(label);
+    card.addEventListener('click',()=>showMachineDetail(id));
+    grid.appendChild(card);
+    renderIsoPreview(canvas,m);
+  });
+  document.getElementById('machines-edition-page').style.display='none';
+  page.style.display='block';
+  document.getElementById('machines-detail-page').style.display='none';
+}
+function showMachineDetail(id){
+  machineState.machineId=id;machineState.layer=0;
+  const m=MACHINES_DATA[id];
+  document.getElementById('machines-detail-page').style.display='block';
+  document.getElementById('machines-list-page').style.display='none';
+  document.getElementById('machines-edition-page').style.display='none';
+  document.getElementById('md-title').textContent=m.name;
+  document.getElementById('md-desc').textContent=m.desc;
+  document.getElementById('md-versions').textContent='Versions: '+m.versions+
+    (m.editions.length===1?' (Java only)':' (Java + Bedrock)');
+  // Total blocks
+  const totals=countMachineBlocks(m,null);
+  renderBlockList('md-total-blocks',totals);
+  // Layer tabs
+  renderLayerTabs(m);
+  renderLayerDetail(m,0);
+  // 3D iso view
+  const canvas=document.getElementById('md-iso-canvas');
+  renderIsoFull(canvas,m,machineState.layer);
+}
+
+function countMachineBlocks(m,layerY){
+  const counts={};
+  m.layers.forEach(layer=>{
+    if(layerY!==null&&layer.y!==layerY)return;
+    layer.blocks.forEach(({block})=>{
+      if(block==='air')return;
+      counts[block]=(counts[block]||0)+1;
+    });
+  });
+  return counts;
+}
+
+function renderBlockList(elId,counts){
+  const el=document.getElementById(elId);
+  el.innerHTML='';
+  Object.entries(counts).sort((a,b)=>b[1]-a[1]).forEach(([block,count])=>{
+    const row=document.createElement('div');row.className='block-count-row';
+    const swatch=document.createElement('div');
+    swatch.className='block-count-swatch';
+    swatch.style.background=getMachineBlockColor(block);
+    const name=document.createElement('span');
+    name.textContent=block.replace(/_/g,' ')+' × '+count;
+    row.appendChild(swatch);row.appendChild(name);
+    el.appendChild(row);
+  });
+}
+
+function renderLayerTabs(m){
+  const tabs=document.getElementById('md-layer-tabs');
+  tabs.innerHTML='';
+  m.layers.forEach((layer,i)=>{
+    const btn=document.createElement('button');
+    btn.className='layer-tab'+(i===machineState.layer?' active':'');
+    btn.textContent='Layer '+(i+1);
+    btn.addEventListener('click',()=>{
+      machineState.layer=i;
+      document.querySelectorAll('.layer-tab').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      renderLayerDetail(m,i);
+      renderIsoFull(document.getElementById('md-iso-canvas'),m,i);
+    });
+    tabs.appendChild(btn);
+  });
+}
+
+function renderLayerDetail(m,i){
+  const layer=m.layers[i];
+  document.getElementById('md-layer-label').textContent=layer.label;
+  document.getElementById('md-layer-note').textContent=layer.note;
+  const counts=countMachineBlocks(m,layer.y);
+  renderBlockList('md-layer-blocks',counts);
+}
+
+// ── Isometric renderer ──────────────────────────────────────
+function isoProject(x,y,z){
+  // True isometric: rotate 45° around Y, tilt ~35.26° down
+  const tileW=24,tileH=12,blockH=20;
+  const sx=(x-z)*tileW/2;
+  const sy=(x+z)*tileH/2-y*blockH;
+  return{sx,sy};
+}
+
+function renderIsoBlock(ctx,x,y,z,block,cs){
+  const tileW=cs,tileH=cs/2,blockH=Math.round(cs*0.8);
+  const sx=(x-z)*tileW/2;
+  const sy=(x+z)*tileH/2-y*blockH;
+  const col=getMachineBlockColor(block);
+  if(block==='air')return;
+  // top face
+  ctx.beginPath();
+  ctx.moveTo(sx,sy);
+  ctx.lineTo(sx+tileW/2,sy+tileH/2);
+  ctx.lineTo(sx+tileW,sy);
+  ctx.lineTo(sx+tileW/2,sy-tileH/2);
+  ctx.closePath();
+  ctx.fillStyle=lighten(col,30);
+  ctx.fill();
+  ctx.strokeStyle='rgba(0,0,0,0.15)';ctx.lineWidth=0.5;ctx.stroke();
+  // left face
+  ctx.beginPath();
+  ctx.moveTo(sx,sy);
+  ctx.lineTo(sx,sy+blockH);
+  ctx.lineTo(sx+tileW/2,sy+tileH/2+blockH);
+  ctx.lineTo(sx+tileW/2,sy+tileH/2);
+  ctx.closePath();
+  ctx.fillStyle=lighten(col,0);
+  ctx.fill();ctx.stroke();
+  // right face
+  ctx.beginPath();
+  ctx.moveTo(sx+tileW,sy);
+  ctx.lineTo(sx+tileW,sy+blockH);
+  ctx.lineTo(sx+tileW/2,sy+tileH/2+blockH);
+  ctx.lineTo(sx+tileW/2,sy+tileH/2);
+  ctx.closePath();
+  ctx.fillStyle=darken(col,25);
+  ctx.fill();ctx.stroke();
+}
+
+function lighten(hex,amt){
+  const r=Math.min(255,parseInt(hex.slice(1,3),16)+amt);
+  const g=Math.min(255,parseInt(hex.slice(3,5),16)+amt);
+  const b=Math.min(255,parseInt(hex.slice(5,7),16)+amt);
+  return`#${r.toString(16).padStart(2,'0')}${g.toString(16).padStart(2,'0')}${b.toString(16).padStart(2,'0')}`;
+}
+function darken(hex,amt){return lighten(hex,-amt);}
+
+function renderIsoPreview(canvas,m){
+  const ctx=canvas.getContext('2d');
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  const{x:W,y:H,z:D}=m.size;
+  const U=Math.max(6,Math.min(14,Math.floor(Math.min(canvas.width*0.35,canvas.height*0.4)/(W+D+1))));
+  const offX=canvas.width/2-U*(W-D)/2;
+  const offY=canvas.height*0.85-U*H;
+  ctx.save();ctx.translate(offX,offY);
+  const allBlocks=[];
+  m.layers.forEach(layer=>{
+    layer.blocks.forEach(({x,z,block})=>allBlocks.push({x,y:layer.y,z,block}));
+  });
+  allBlocks.sort((a,b)=>a.y!==b.y?a.y-b.y:(a.x+a.z)-(b.x+b.z));
+  allBlocks.forEach(({x,y,z,block})=>{
+    if(block==='air')return;
+    const sx=(x-z)*U;
+    const sy=(x+z)*U/2-y*U;
+    renderIsoBlockAt(ctx,sx,sy,block,U);
+  });
+  ctx.restore();
+}
+
+// Blocks that are thin/flat - render as objects ON TOP of a surface
+const FLAT_BLOCKS=new Set(['detector_rail','powered_rail','rail','activator_rail',
+  'dead_brain_coral_fan','dead_tube_coral_fan','dead_horn_coral_fan',
+  'brain_coral_fan','tube_coral_fan','horn_coral_fan',
+  'dead_fire_coral_fan','fire_coral_fan','bubble_coral_fan','dead_bubble_coral_fan',
+]);
+
+function renderIsoBlockAt(ctx,sx,sy,block,cs){
+  if(block==='air')return;
+  const U=cs;
+  const col=getMachineBlockColor(block);
+  const tex=getMachineBlockTex(block);
+
+  if(FLAT_BLOCKS.has(block)){
+    // Render as thin flat slab sitting on top of the block below
+    const slabH=Math.max(2,Math.round(U*0.18));
+    // top face (full diamond)
+    ctx.beginPath();
+    ctx.moveTo(sx,      sy);
+    ctx.lineTo(sx+U,    sy+U/2);
+    ctx.lineTo(sx+2*U,  sy);
+    ctx.lineTo(sx+U,    sy-U/2);
+    ctx.closePath();
+    ctx.fillStyle=lighten(col,40);
+    if(tex&&tex.complete&&tex.naturalWidth>0){
+      try{ctx.save();ctx.clip();ctx.drawImage(tex,sx,sy-U/2,2*U,U);ctx.restore();}catch(e){}
+      ctx.fillStyle='rgba(255,255,255,0.2)';ctx.fill();
+    } else {ctx.fill();}
+    ctx.strokeStyle='rgba(0,0,0,0.3)';ctx.lineWidth=0.8;ctx.stroke();
+    // thin left edge
+    ctx.beginPath();
+    ctx.moveTo(sx,sy);ctx.lineTo(sx,sy+slabH);
+    ctx.lineTo(sx+U,sy+U/2+slabH);ctx.lineTo(sx+U,sy+U/2);ctx.closePath();
+    ctx.fillStyle=col;ctx.fill();ctx.stroke();
+    // thin right edge
+    ctx.beginPath();
+    ctx.moveTo(sx+2*U,sy);ctx.lineTo(sx+2*U,sy+slabH);
+    ctx.lineTo(sx+U,sy+U/2+slabH);ctx.lineTo(sx+U,sy+U/2);ctx.closePath();
+    ctx.fillStyle=darken(col,30);ctx.fill();ctx.stroke();
+    return;
+  }
+
+  // Full cube
+  function drawFace(verts,fillColor,texOffX,texOffY,texW,texH,overlayAlpha,overlayDark){
+    ctx.beginPath();
+    ctx.moveTo(verts[0][0],verts[0][1]);
+    verts.slice(1).forEach(([x,y])=>ctx.lineTo(x,y));
+    ctx.closePath();
+    ctx.fillStyle=fillColor;ctx.fill();
+    if(tex&&tex.complete&&tex.naturalWidth>0){
+      try{
+        ctx.save();ctx.clip();
+        ctx.globalAlpha=0.85;ctx.drawImage(tex,texOffX,texOffY,texW,texH);
+        ctx.globalAlpha=overlayAlpha;
+        ctx.fillStyle=overlayDark?'rgba(0,0,0,'+overlayAlpha+')':'rgba(255,255,255,'+overlayAlpha+')';
+        ctx.fillRect(texOffX,texOffY,texW,texH);
+        ctx.restore();
+      }catch(e){}
+    }
+    ctx.strokeStyle='rgba(0,0,0,0.3)';ctx.lineWidth=0.8;ctx.stroke();
+  }
+
+  const top=[[sx,sy],[sx+U,sy+U/2],[sx+2*U,sy],[sx+U,sy-U/2]];
+  const left=[[sx,sy],[sx,sy+U],[sx+U,sy+U+U/2],[sx+U,sy+U/2]];
+  const right=[[sx+U,sy+U/2],[sx+U,sy+U+U/2],[sx+2*U,sy+U],[sx+2*U,sy]];
+
+  drawFace(top,  lighten(col,55), sx,   sy-U/2, 2*U, U,   0.25, false);
+  drawFace(left, col,             sx,   sy,      U,   U,   0.1,  true);
+  drawFace(right,darken(col,40),  sx+U, sy+U/2,  U,   U,   0.3,  true);
+}
+
+function renderMachineIfActive(){
+  if(machineState.machineId){
+    const m=MACHINES_DATA[machineState.machineId];
+    renderIsoFull(document.getElementById('md-iso-canvas'),m,machineState.layer);
+  }
+}
+
+function renderIsoFull(canvas,m,activeLayer){
+  if(!canvas)return;
+  const W=640,H=560;
+  canvas.width=W;canvas.height=H;
+  canvas.style.width=W+'px';canvas.style.height=H+'px';
+  const ctx=canvas.getContext('2d');
+  ctx.fillStyle='#1a1a1a';ctx.fillRect(0,0,W,H);
+  const{x:MX,y:MY,z:MZ}=m.size;
+  const cs=Math.max(12,Math.min(28,Math.floor(Math.min(W*0.4,H*0.5)/(MX+MZ+2))));
+  const U=cs;
+  const offX=W/2-U*(MX-MZ)/2;
+  const offY=H*0.82-U*(MY);
+  ctx.save();ctx.translate(offX,offY);
+  const blockList=[];
+  m.layers.forEach(layer=>{
+    const isActive=layer.y===m.layers[activeLayer].y;
+    layer.blocks.forEach(({x,z,block})=>{
+      blockList.push({x,y:layer.y,z,block,isActive,dimmed:layer.y>m.layers[activeLayer].y});
+    });
+  });
+  blockList.sort((a,b)=>a.y!==b.y?a.y-b.y:(a.x+a.z)-(b.x+b.z));
+  blockList.forEach(({x,y,z,block,isActive,dimmed})=>{
+    if(block==='air'||dimmed)return;
+    const sx=(x-z)*U;
+    const sy=(x+z)*U/2-y*U;
+    ctx.globalAlpha=1;
+    renderIsoBlockAt(ctx,sx,sy,block,U);
+  });
+  ctx.globalAlpha=1;
+  ctx.restore();
+  // zoom state
+  canvas._scale=canvas._scale||1;
+}
+
+// Zoom
+let isoScale=1,isoOffX=0,isoOffY=0;
+function setupIsoZoom(){
+  const canvas=document.getElementById('md-iso-canvas');
+  if(!canvas)return;
+  canvas.addEventListener('wheel',e=>{
+    e.preventDefault();
+    isoScale=Math.max(0.5,Math.min(3,isoScale-(e.deltaY>0?0.1:-0.1)));
+    applyIsoTransform();
+  },{passive:false});
+  // touch pinch
+  let lastDist=0;
+  canvas.addEventListener('touchstart',e=>{
+    if(e.touches.length===2){lastDist=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);}
+  },{passive:true});
+  canvas.addEventListener('touchmove',e=>{
+    if(e.touches.length===2){
+      const d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);
+      isoScale=Math.max(0.5,Math.min(3,isoScale*(d/lastDist)));
+      lastDist=d;applyIsoTransform();
+    }
+  },{passive:true});
+}
+function applyIsoTransform(){
+  const canvas=document.getElementById('md-iso-canvas');
+  if(canvas)canvas.style.transform=`scale(${isoScale})`;
+}
+
+// Export machine as schematic
+document.getElementById('md-export')?.addEventListener('click',async()=>{
+  const m=MACHINES_DATA[machineState.machineId];
+  if(!m)return;
+  const btn=document.getElementById('md-export'),msg=document.getElementById('md-export-msg');
+  btn.disabled=true;msg.textContent='Building…';
+  try{
+    const blockMap=new Map();
+    m.layers.forEach(layer=>{
+      layer.blocks.forEach(({x,z,block})=>{
+        if(block!=='air')blockMap.set(`${x},${layer.y},${z}`,'minecraft:'+block);
+      });
+    });
+    const{x:W,y:H,z:D}=m.size;
+    await buildMultiSchem(blockMap,W,H,D,m.id);
+    msg.textContent='✓ Downloaded!';setTimeout(()=>msg.textContent='',3000);
+  }catch(e){msg.textContent='Error: '+e.message;}
+  btn.disabled=false;
+});
+
+// Back buttons
+document.getElementById('machines-back-to-editions')?.addEventListener('click',showMachinesPage);
+document.getElementById('machines-back-to-list')?.addEventListener('click',()=>showMachinesList(machineState.edition));
+
+setupIsoZoom();
+
+populateBlockSelects();
+
+rCircle();
+</script>
+</body>
+</html>
