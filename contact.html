@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Contact — Blocksmith Tools</title>
+<meta name="description" content="Contact Blocksmith Tools. Report bugs, suggest new features, or send feedback about the Minecraft building tools.">
+<meta property="og:title" content="Contact — Blocksmith Tools">
+<meta property="og:description" content="Get in touch with Blocksmith Tools. Bug reports, feature requests and feedback welcome.">
+<meta property="og:image" content="https://blocksmith.tools/preview.png">
+<meta property="og:url" content="https://blocksmith.tools/contact">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://blocksmith.tools/contact">
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=VT323&family=Press+Start+2P&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=VT323&family=Press+Start+2P&display=swap" rel="stylesheet"></noscript>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#222;color:#ddd;font-family:'VT323',monospace;min-height:100vh;line-height:1.6}
+
+/* ── Site nav ── */
+#sitenav{background:#1a1a1a;border-bottom:1px solid #333;padding:.6rem 1rem;display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;}
+#sitenav .logo{font-family:'Press Start 2P',monospace;font-size:10px;color:#5ddf2f;text-decoration:none;text-shadow:2px 2px 0 #1f5c0e;white-space:nowrap;}
+#sitenav .logo span{color:#aaa;}
+#sitenav-links{display:flex;gap:1rem;margin-left:auto;}
+#sitenav-links a{font-family:'VT323',monospace;font-size:20px;color:#888;text-decoration:none;padding:2px 8px;border:1px solid transparent;transition:color .15s,border-color .15s;}
+#sitenav-links a:hover{color:#ccc;border-color:#444;}
+#sitenav-links a.active{color:#5ddf2f;border-color:#5ddf2f;}
+
+/* ── Page ── */
+.page{max-width:700px;margin:0 auto;padding:3rem 1.5rem 4rem;}
+h1{font-family:'Press Start 2P',monospace;font-size:12px;color:#5ddf2f;line-height:1.8;margin-bottom:.5rem;text-shadow:2px 2px 0 #1f5c0e;}
+.subtitle{font-size:20px;color:#777;margin-bottom:2.5rem;}
+h2{font-family:'Press Start 2P',monospace;font-size:8px;color:#5ddf2f;line-height:1.8;margin:2rem 0 .75rem;}
+p{font-size:19px;color:#999;margin-bottom:1rem;}
+a{color:#5ddf2f;text-decoration:none;}
+a:hover{text-decoration:underline;}
+
+/* ── Contact options ── */
+.contact-options{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-bottom:2.5rem;}
+.contact-option{background:#161616;border:1px solid #2a2a2a;padding:1.25rem;transition:border-color .15s;}
+.contact-option:hover{border-color:#444;}
+.contact-option .icon{font-size:30px;margin-bottom:.6rem;}
+.contact-option h3{font-family:'Press Start 2P',monospace;font-size:7px;color:#ccc;line-height:1.8;margin-bottom:.4rem;}
+.contact-option p{font-size:17px;color:#666;margin-bottom:.6rem;}
+.contact-option a.btn{display:inline-block;font-family:'VT323',monospace;font-size:18px;color:#5ddf2f;border:1px solid #5ddf2f;padding:3px 12px;text-decoration:none;transition:background .15s,color .15s;}
+.contact-option a.btn:hover{background:#5ddf2f;color:#111;}
+
+/* ── Form ── */
+.form-wrap{background:#161616;border:1px solid #2a2a2a;padding:1.5rem;}
+.form-row{margin-bottom:1rem;}
+label{display:block;font-size:18px;color:#777;margin-bottom:4px;}
+input[type=text],input[type=email],select,textarea{
+  width:100%;background:#111;border:1px solid #333;color:#ccc;
+  font-family:'VT323',monospace;font-size:19px;padding:8px 10px;
+  outline:none;transition:border-color .15s;
+}
+input:focus,select:focus,textarea:focus{border-color:#5ddf2f;}
+textarea{resize:vertical;min-height:140px;}
+select option{background:#111;}
+.form-submit{margin-top:1.25rem;}
+.submit-btn{font-family:'Press Start 2P',monospace;font-size:8px;background:#1d3020;color:#5ddf2f;border:1px solid #5ddf2f;border-bottom-color:#2a6010;border-right-color:#2a6010;padding:10px 20px;cursor:pointer;transition:background .15s;}
+.submit-btn:hover{background:#244026;}
+.form-msg{font-size:18px;margin-top:.75rem;color:#5ddf2f;min-height:24px;}
+.form-msg.error{color:#d46060;}
+
+/* ── Footer ── */
+#footer{border-top:1px solid #2a2a2a;padding:1rem 1.5rem;text-align:center;font-size:17px;color:#444;max-width:700px;margin:0 auto;}
+#footer a{color:#555;text-decoration:none;}
+#footer a:hover{color:#888;}
+</style>
+</head>
+<body>
+
+<nav id="sitenav">
+  <a class="logo" href="/">⬛ Blocksmith<span>.tools</span></a>
+  <div id="sitenav-links">
+    <a href="/">Tools</a>
+    <a href="/about">About</a>
+    <a href="/contact" class="active">Contact</a>
+  </div>
+</nav>
+
+<div class="page">
+
+  <h1>Get in Touch</h1>
+  <div class="subtitle">Bug reports, feature ideas, feedback — all welcome.</div>
+
+  <div class="contact-options">
+    <div class="contact-option">
+      <div class="icon">🐛</div>
+      <h3>Bug Report</h3>
+      <p>Something broken or not working as expected? Use the form below or the bug report button on the main tool.</p>
+      <a href="#form" class="btn">Report a bug</a>
+    </div>
+    <div class="contact-option">
+      <div class="icon">💡</div>
+      <h3>Feature Request</h3>
+      <p>Have an idea for a new tool or improvement? Send it through — good ideas get built.</p>
+      <a href="#form" class="btn">Share an idea</a>
+    </div>
+    <div class="contact-option">
+      <div class="icon">✉️</div>
+      <h3>Email Directly</h3>
+      <p>Prefer email? Reach out directly and expect a reply within a few days.</p>
+      <a href="mailto:help@blocksmith.tools" class="btn">Send email</a>
+    </div>
+  </div>
+
+  <h2 id="form">Send a Message</h2>
+
+  <div class="form-wrap">
+    <form id="contact-form" action="https://formspree.io/f/xzdwngyg" method="POST">
+      <div class="form-row">
+        <label for="contact-type">Type</label>
+        <select id="contact-type" name="type">
+          <option value="Bug Report">🐛 Bug Report</option>
+          <option value="Feature Request">💡 Feature Request</option>
+          <option value="General Feedback">💬 General Feedback</option>
+          <option value="Other">📨 Other</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label for="contact-tool">Which tool? (optional)</label>
+        <select id="contact-tool" name="tool">
+          <option value="">— Select a tool —</option>
+          <option>Circle</option>
+          <option>Oval</option>
+          <option>Sphere</option>
+          <option>Arc</option>
+          <option>Pixel Art</option>
+          <option>General / Site</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label for="contact-email">Your email (optional — only if you want a reply)</label>
+        <input type="email" id="contact-email" name="_replyto" placeholder="you@example.com">
+      </div>
+      <div class="form-row">
+        <label for="contact-msg">Message</label>
+        <textarea id="contact-msg" name="message" placeholder="Describe the bug, idea or feedback..." required></textarea>
+      </div>
+      <input type="hidden" name="_subject" value="Message — blocksmith.tools">
+      <div class="form-submit">
+        <button type="submit" class="submit-btn">📨 Send Message</button>
+        <div class="form-msg" id="contact-msg-status"></div>
+      </div>
+    </form>
+  </div>
+
+  <p style="margin-top:1.5rem;font-size:17px;color:#555;">Response time is typically 1–3 days. For urgent issues, email <a href="mailto:help@blocksmith.tools">help@blocksmith.tools</a> directly.</p>
+
+</div>
+
+<div id="footer">
+  <a href="/">Tools</a> &nbsp;·&nbsp;
+  <a href="/about">About</a> &nbsp;·&nbsp;
+  <a href="/contact">Contact</a>
+  <br><br>© 2026 blocksmith.tools
+</div>
+
+<script>
+const form = document.getElementById('contact-form');
+const status = document.getElementById('contact-msg-status');
+form.addEventListener('submit', async e => {
+  e.preventDefault();
+  const btn = form.querySelector('.submit-btn');
+  btn.textContent = 'Sending...';
+  btn.disabled = true;
+  try {
+    const res = await fetch(form.action, {
+      method: 'POST',
+      body: new FormData(form),
+      headers: { 'Accept': 'application/json' }
+    });
+    if (res.ok) {
+      status.textContent = '✓ Message sent! Thanks for the feedback.';
+      status.className = 'form-msg';
+      form.reset();
+    } else {
+      throw new Error();
+    }
+  } catch {
+    status.textContent = '✗ Something went wrong. Try emailing help@blocksmith.tools directly.';
+    status.className = 'form-msg error';
+  }
+  btn.textContent = '📨 Send Message';
+  btn.disabled = false;
+});
+</script>
+
+</body>
+</html>

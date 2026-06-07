@@ -59,6 +59,14 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 body{background:#222222;color:#dddddd;font-family:'VT323',monospace;min-height:100vh}
+/* ── Site nav ── */
+#sitenav{background:#1a1a1a;border-bottom:1px solid #333;padding:.6rem 1rem;display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;}
+#sitenav .logo{font-family:'Press Start 2P',monospace;font-size:10px;color:#5ddf2f;text-decoration:none;text-shadow:2px 2px 0 #1f5c0e;white-space:nowrap;}
+#sitenav .logo span{color:#aaa;}
+#sitenav-links{display:flex;gap:1rem;margin-left:auto;}
+#sitenav-links a{font-family:'VT323',monospace;font-size:20px;color:#888;text-decoration:none;padding:2px 8px;border:1px solid transparent;transition:color .15s,border-color .15s;}
+#sitenav-links a:hover{color:#ccc;border-color:#444;}
+#sitenav-links a.active{color:#5ddf2f;border-color:#5ddf2f;}
 #app{max-width:1400px;margin:0 auto;padding:1.5rem 1rem 3rem}
 
 h1{
@@ -219,6 +227,22 @@ input[type=range]{accent-color:#5ddf2f;width:170px;cursor:pointer}
 .machines-back{font-family:'VT323',monospace;font-size:19px;color:#555;background:none;border:1px solid #333;padding:4px 12px;cursor:pointer;margin-bottom:1rem;}
 .machines-back:hover{color:#aaa;border-color:#555;}
 
+/* ── Content Section ── */
+#content-section{border-top:1px solid #2a2a2a;margin-top:2rem;}
+#content-section h2{font-family:'Press Start 2P',monospace;font-size:9px;color:#5ddf2f;line-height:1.8;margin:0 0 .75rem;}
+#content-section h3{font-family:'VT323',monospace;font-size:22px;color:#ccc;margin:0 0 .4rem;}
+#content-section p{font-family:'VT323',monospace;font-size:18px;color:#888;line-height:1.6;margin:0 0 .6rem;}
+#content-section ul{font-family:'VT323',monospace;font-size:18px;color:#888;line-height:1.8;margin:0 0 .6rem;padding-left:1.2rem;}
+#content-section li{margin-bottom:2px;}
+#content-section code{background:#1a1a1a;color:#5ddf2f;padding:1px 5px;font-size:15px;border:1px solid #333;}
+#content-section strong{color:#aaa;}
+.content-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;margin-bottom:2rem;}
+.content-card{background:#161616;border:1px solid #2a2a2a;padding:1.25rem 1.25rem 1rem;}
+.content-faq{border-top:1px solid #2a2a2a;padding-top:1.5rem;}
+.content-faq h2{margin-bottom:1rem;}
+.faq-item{border-bottom:1px solid #222;padding:.75rem 0;}
+.faq-item:last-child{border-bottom:none;}
+
 /* ── Zoom View ── */
 .zv-wrap{display:flex;gap:1rem;align-items:flex-start;flex-wrap:wrap;}
 .zv-panel{display:flex;flex-direction:column;gap:4px;flex-shrink:0;}
@@ -364,6 +388,14 @@ input[type=range]{accent-color:#5ddf2f;width:170px;cursor:pointer}
 </style>
 </head>
 <body>
+<nav id="sitenav">
+  <a class="logo" href="/">⬛ Blocksmith<span>.tools</span></a>
+  <div id="sitenav-links">
+    <a href="/" class="active">Tools</a>
+    <a href="/about">About</a>
+    <a href="/contact">Contact</a>
+  </div>
+</nav>
 
 <!-- About modal -->
 <div class="info-overlay" id="about-overlay">
@@ -730,6 +762,99 @@ input[type=range]{accent-color:#5ddf2f;width:170px;cursor:pointer}
       <button class="expbtn" id="pa-clear" style="background:#200e0e;color:#d46060;border-color:#5a1f1f;border-bottom-color:#110404;border-right-color:#110404;">🗑 Clear</button>
       <span class="exp-msg" id="pa-expmsg"></span>
     </div>
+  </div>
+
+</div>
+
+<!-- Content section for SEO and AdSense compliance -->
+<div id="content-section" style="max-width:1400px;margin:0 auto;padding:2rem 1rem 1rem;">
+
+  <div class="content-grid">
+
+    <div class="content-card">
+      <h2>How to Build a Perfect Circle in Minecraft</h2>
+      <p>Building a perfect circle in Minecraft is one of the most common challenges for builders. Because Minecraft uses a block-based grid, true curves don't exist — instead, you approximate them using a technique called pixel art circles or voxel circles.</p>
+      <p>The trick is to follow a mathematical pattern where each row of blocks is offset slightly from the previous one. The Blocksmith Circle Generator calculates this pattern automatically for any diameter you choose, from tiny 5-block circles to massive 200-block rings.</p>
+      <p><strong>Tips for building circles:</strong></p>
+      <ul>
+        <li>Use odd diameters for perfectly symmetrical circles with a clear center block</li>
+        <li>The "Outline" mode shows just the ring — ideal for towers, arenas and portals</li>
+        <li>The "Filled" mode fills the entire circle — great for platforms and floors</li>
+        <li>Click any block to mark it as placed and track your progress</li>
+        <li>Export as <code>.schem</code> to paste directly into your world with WorldEdit or Litematica</li>
+      </ul>
+    </div>
+
+    <div class="content-card">
+      <h2>How to Build a Sphere in Minecraft</h2>
+      <p>A Minecraft sphere is built layer by layer. Each horizontal slice of the sphere is a circle with a different radius — largest at the equator and smallest at the top and bottom. The Blocksmith Sphere Generator shows you exactly which blocks to place on each layer.</p>
+      <p>Use the layer slider to move through each cross-section of the sphere from bottom to top. The 3D viewer lets you rotate, pan and zoom to visualise the full shape before you start building.</p>
+      <p><strong>Tips for building spheres:</strong></p>
+      <ul>
+        <li>Start from the bottom layer and work upward</li>
+        <li>Use the "Below" view in the 3D viewer to see all completed layers</li>
+        <li>Hollow spheres are great for domes, planetarium builds and giant sculptures</li>
+        <li>For large spheres (50+ diameter), export as <code>.schem</code> and use a paste tool — building manually takes hours</li>
+        <li>Combine multiple sphere layers to create eggs, blimps or organic shapes</li>
+      </ul>
+    </div>
+
+    <div class="content-card">
+      <h2>Oval and Arc Generators</h2>
+      <p>Not every build needs a perfect circle. The Oval Generator lets you set independent width and height values to create stretched or compressed ellipses — perfect for race tracks, swimming pools, stadium designs and natural-looking terrain.</p>
+      <p>The Arc Generator creates partial circles and curved walls. Set the start and end angle to get exactly the curve you need. Arcs are ideal for curved bridges, amphitheatres, curved roads and decorative architectural details.</p>
+      <p><strong>Common uses:</strong></p>
+      <ul>
+        <li><strong>Oval:</strong> Swimming pools, race ovals, oval windows, natural cave entrances</li>
+        <li><strong>Arc:</strong> Bridge arches, curved walls, half-pipe ramps, decorative cornices</li>
+        <li>Both tools support block selection and <code>.schem</code> export</li>
+        <li>Use the zoom view to inspect fine details at high diameter values</li>
+      </ul>
+    </div>
+
+    <div class="content-card">
+      <h2>Pixel Art in Minecraft</h2>
+      <p>The Pixel Art tool lets you upload any image and convert it into a Minecraft block layout automatically. The tool analyses each pixel and finds the closest matching Minecraft block colour from a palette of 162 blocks including concrete, wool, terracotta, glazed terracotta, and more.</p>
+      <p>You can also paint pixel art manually using the brush and fill tools. Set any custom width and height up to 256×256 blocks, choose your palette, and export the finished design as a <code>.schem</code> file ready to paste into your world.</p>
+      <p><strong>Tips for pixel art:</strong></p>
+      <ul>
+        <li>Use concrete blocks for the most vibrant and consistent colours</li>
+        <li>Keep pixel art below 128×128 for practical in-game building</li>
+        <li>The fill tool (paint bucket) is great for large background areas</li>
+        <li>Wool gives a slightly different shade than concrete — mix them for shading effects</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="content-faq">
+    <h2>Frequently Asked Questions</h2>
+
+    <div class="faq-item">
+      <h3>What is a .schem file and how do I use it?</h3>
+      <p>A <code>.schem</code> file (schematic) is a file format used by Minecraft building tools like <strong>WorldEdit</strong>, <strong>Litematica</strong>, and <strong>Axiom</strong>. Download the schematic from Blocksmith Tools, place it in your tool's schematics folder, and paste it into your world at any position. This saves hours of manual block-by-block building.</p>
+    </div>
+
+    <div class="faq-item">
+      <h3>Does this work for Minecraft Java and Bedrock?</h3>
+      <p>The circle, oval, sphere and arc generators work identically for both Java and Bedrock editions — the block patterns are the same. The <code>.schem</code> export format is designed for Java Edition tools. Bedrock players can still use the visual guides to build manually.</p>
+    </div>
+
+    <div class="faq-item">
+      <h3>What diameter should I use for a sphere?</h3>
+      <p>For decorative builds, diameters between 15 and 30 blocks look great and are manageable to build. For large landmark spheres, 50–100 blocks creates an impressive result but requires a schematic paste tool. Anything above 100 blocks is best suited for superflat creative worlds where you have unlimited resources.</p>
+    </div>
+
+    <div class="faq-item">
+      <h3>Why don't Minecraft circles look perfectly round?</h3>
+      <p>Minecraft uses a cubic block grid, so true curves are impossible. What we call a "Minecraft circle" is the closest possible approximation using whole blocks — similar to how old pixel art represents curves on a screen. The generator uses the midpoint circle algorithm to produce the most accurate approximation possible at any given diameter.</p>
+    </div>
+
+    <div class="faq-item">
+      <h3>Is Blocksmith Tools free?</h3>
+      <p>Yes — completely free, no account required, no downloads. All tools run directly in your browser. The only optional feature is the <code>.schem</code> export which also costs nothing.</p>
+    </div>
+
   </div>
 
 </div>
