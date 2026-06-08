@@ -402,7 +402,7 @@ input[type=range]{accent-color:#5ddf2f;width:170px;cursor:pointer}
   <div class="info-box">
     <button class="info-close" onclick="document.getElementById('about-overlay').classList.remove('show')">✕</button>
     <h2>About Blocksmith</h2>
-    <p>Blocksmith.tools is a free, browser based toolkit for Minecraft builders. No downloads, no accounts, no ads that follow you around — just tools that help you build.</p>
+    <p>Blocksmith.tools is a free, browser based toolkit for Minecraft builders. No downloads, no accounts, no ads that follow you around. Just tools that help you build.</p>
     <p>We offer pixel perfect generators for circles, ovals, spheres and arcs, with block by block progress tracking, real Minecraft block textures, and direct export to <strong>.schem</strong> schematics compatible with WorldEdit, Litematica and Axiom.</p>
     <p>This project was built by a small team of Minecraft enthusiasts who got tired of outdated, ugly generator sites. We're always adding new tools. If you have a suggestion, let us know!</p>
     <p>📧 <a href="mailto:help@blocksmith.tools">help@blocksmith.tools</a></p>
@@ -837,12 +837,12 @@ input[type=range]{accent-color:#5ddf2f;width:170px;cursor:pointer}
 
     <div class="faq-item">
       <h3>Does this work for Minecraft Java and Bedrock?</h3>
-      <p>The circle, oval, sphere and arc generators work identically for both Java and Bedrock editions — the block patterns are the same. The <code>.schem</code> export format is designed for Java Edition tools. Bedrock players can still use the visual guides to build manually.</p>
+      <p>The circle, oval, sphere and arc generators work identically for both Java and Bedrock editions. The block patterns are the same. The <code>.schem</code> export format is designed for Java Edition tools. Bedrock players can still use the visual guides to build manually.</p>
     </div>
 
     <div class="faq-item">
       <h3>What diameter should I use for a sphere?</h3>
-      <p>For decorative builds, diameters between 15 and 30 blocks look great and are manageable to build. For large landmark spheres, 50–100 blocks creates an impressive result but requires a schematic paste tool. Anything above 100 blocks is best suited for superflat creative worlds where you have unlimited resources.</p>
+      <p>For decorative builds, diameters between 15 and 30 blocks look great and are manageable to build. Go bigger and the results get more impressive — just export as a <code>.schem</code> and paste it in with WorldEdit, Litematica or Axiom. There is no limit on what you can build.</p>
     </div>
 
     <div class="faq-item">
@@ -1234,17 +1234,40 @@ function initSp3D(){
   const mShell=new THREE.MeshLambertMaterial({color:0x3a8c1a});
   const mLayer=new THREE.MeshLambertMaterial({color:0xe8c030});
   const mDone =new THREE.MeshLambertMaterial({color:0x484848});
+  const texLoader=new THREE.TextureLoader();
 
   function updateMaterials(){
     const{isDefault,rawId,color}=getBlockConfig('sp-block');
     const isGlass=GLASS_IDS.has(rawId);
-    if(!isDefault&&color){
-      mShell.color.set(color);
-      mShell.transparent=isGlass;mShell.opacity=isGlass?0.8:1;mShell.needsUpdate=true;
-    }else{
-      mShell.color.set(0x3a8c1a);mShell.transparent=false;mShell.opacity=1;mShell.needsUpdate=true;
-    }
     mLayer.color.set(0xe8c030);mDone.color.set(0x484848);
+    if(!isDefault&&rawId){
+      // Set color immediately as placeholder
+      mShell.map=null;
+      mShell.color.set(color||0x3a8c1a);
+      mShell.transparent=isGlass;mShell.opacity=isGlass?0.75:1;
+      mShell.needsUpdate=true;
+      // Load texture async
+      texLoader.setCrossOrigin('anonymous');
+      texLoader.load(
+        PA_CDN+rawId+'.png',
+        tex=>{
+          tex.magFilter=THREE.NearestFilter;
+          tex.minFilter=THREE.NearestFilter;
+          mShell.map=tex;
+          mShell.color.set(0xffffff);
+          mShell.needsUpdate=true;
+        },
+        undefined,
+        ()=>{
+          mShell.map=null;
+          mShell.color.set(color||0x3a8c1a);
+          mShell.needsUpdate=true;
+        }
+      );
+    }else{
+      mShell.map=null;mShell.color.set(0x3a8c1a);
+      mShell.transparent=false;mShell.opacity=1;mShell.needsUpdate=true;
+    }
   }
 
   const group=new THREE.Group();scene.add(group);
