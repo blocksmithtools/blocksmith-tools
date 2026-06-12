@@ -414,7 +414,7 @@ input[type=range]{accent-color:#5ddf2f;width:170px;cursor:pointer}
     <h2>About Blocksmith</h2>
     <p>Blocksmith.tools is a free, browser based toolkit for Minecraft builders. No downloads, no accounts, no ads that follow you around. Just tools that help you build.</p>
     <p>We offer pixel perfect generators for circles, ovals, spheres and arcs, with block by block progress tracking, real Minecraft block textures, and direct export to <strong>.schem</strong> schematics compatible with WorldEdit, Litematica and Axiom.</p>
-    <p>This project was built by a small team of Minecraft enthusiasts who got tired of outdated, ugly generator sites. We're always adding new tools. If you have a suggestion, let us know!</p>
+    <p>This project started when one Minecraft player got tired of outdated, clunky generator sites and decided to build something better. It has grown into a full toolkit. We're always adding new tools. If you have a suggestion, let us know!</p>
     <p>📧 <a href="mailto:help@blocksmith.tools">help@blocksmith.tools</a></p>
   </div>
 </div>
@@ -498,7 +498,7 @@ input[type=range]{accent-color:#5ddf2f;width:170px;cursor:pointer}
     <div id="ab-title">👋 Hey, quick note!</div>
     <div id="ab-body">
       It looks like you're using an adblocker.<br><br>
-      Blocksmith.tools is <em>completely free</em> to use and the ads help keep it that way. No popups,, no auto play videos, just a couple of small banners.<br><br>
+      Blocksmith.tools is <em>completely free</em> to use and the ads help keep it that way. No popups, no auto play videos, just a couple of small banners.<br><br>
       If you enjoy the tool, consider whitelisting <em>blocksmith.tools</em> to support it. It really helps! 🙏
     </div>
     <button id="ab-dismiss">✅ Sure, I'll whitelist it!</button>
@@ -514,7 +514,7 @@ input[type=range]{accent-color:#5ddf2f;width:170px;cursor:pointer}
     <button class="tab" data-t="oval">🥚 Oval</button>
     <button class="tab" data-t="sphere">🌐 Sphere</button>
     <button class="tab" data-t="arc">🌙 Arc</button>
-    <button class="tab" data-t="pixelart">🎨 Pixel Art <span style="font-size:11px;color:#f0c040;font-family:sans-serif">(beta)</span></button>
+    <button class="tab" data-t="pixelart">🎨 Pixel Art</button>
   </nav>
 
   <!-- CIRCLE -->
@@ -876,7 +876,7 @@ input[type=range]{accent-color:#5ddf2f;width:170px;cursor:pointer}
 <div id="app-footer" style="max-width:1400px;margin:0 auto;padding:0 1rem 2rem">
   <div id="footer">
     <a href="/about">About</a>
-    <a onclick="document.getElementById('privacy-overlay').classList.add('show')">Privacy Policy</a>
+    <a href="/privacy">Privacy Policy</a>
     <a href="/contact">Contact</a>
     <a href="/terms">Terms of Service</a>
     <span class="copy">© 2026 blocksmith.tools</span>
@@ -1077,7 +1077,7 @@ function rSphere(){
   const sl=document.getElementById('sp-layer');sl.max=d;sl.value=layer;
   document.getElementById('sp-ldisp').textContent=`${layer} / ${d}`;
   const R=d/2,dy=layer-0.5-R,rl=Math.sqrt(Math.max(0,R*R-dy*dy));
-  document.getElementById('sp-linfo').innerHTML=`Layer <em>${layer}</em> of <em>${d}</em> — cross-section radius: <em>${rl.toFixed(1)}</em> blocks`;
+  document.getElementById('sp-linfo').innerHTML=`Layer <em>${layer}</em> of <em>${d}</em> · cross-section radius: <em>${rl.toFixed(1)}</em> blocks`;
   if(!S.sphere.ck[layer])S.sphere.ck[layer]=new Set();
   const shell=shellLayerGrid(d,layer);
   const layerGrid=mode==='solid'?fillShellLayer(shell,d):shell;
@@ -1684,7 +1684,11 @@ document.getElementById('bug-form').addEventListener('submit',async e=>{
 });
 
 // ── Adblock detector ──
+// DISABLED until AdSense is approved. Re-enable by removing the early return below
+// once ads are actually serving, otherwise the popup shows for everyone (including reviewers).
 (function(){
+  return; // <-- remove this line after AdSense approval
+
   // Don't show if user already dismissed it
   if(localStorage.getItem('ab_dismissed'))return;
 
